@@ -10,15 +10,16 @@ import java.awt.event.ActionListener;
 
 public class AdminPage extends JFrame {
     Container container;
-    public AdminPage(){
+
+    public AdminPage() {
         new Theme(1);
-        this.container=getContentPane();
+        this.container = getContentPane();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - getWidth()) / 2; // 计算水平位置
         int y = (screenSize.height - getHeight()) / 2; // 计算垂直位置
 
         setTitle("管理员界面");
-        setBounds(x - 500, y - 350, 1000, 700); // 让窗口在屏幕居中
+        setBounds(x - 650, y - 375, 1300, 750); // 让窗口在屏幕居中
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // 设置点击X结束程序
         getContentPane().setLayout(null);
 
@@ -36,14 +37,27 @@ public class AdminPage extends JFrame {
         categoryAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // 清除当前容器中所有的内容并刷新
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
                 new Category(getContentPane()).add();
-                repaint();// 刷新页面
             }
         });
 
         JMenuItem categoryModify = new JMenuItem("类别修改");
         categoryModify.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         categoryMenu.add(categoryModify);
+        categoryModify.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 清除当前容器中所有的内容并刷新
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                new Category(getContentPane()).modify();
+            }
+        });
 
 
         JMenu bookMenu = new JMenu("书籍管理");
@@ -71,7 +85,7 @@ public class AdminPage extends JFrame {
         userBorrowInfo.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         userMenu.add(userBorrowInfo);
 
-        new Category(getContentPane()).add();
+        new Category(getContentPane()).modify(); //测试
 
         setVisible(true);
     }

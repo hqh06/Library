@@ -115,7 +115,7 @@ public class MyInfoPage extends JFrame {
 
         borrowDetailTable.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20)); // 设置表头字体
         borrowDetailTable.getTableHeader().setReorderingAllowed(false); // 禁止拖动表的列
-        borrowDetailTable.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        borrowDetailTable.setFont(new Font("微软雅黑", Font.PLAIN, 17));
         borrowDetailTable.setRowHeight(40); // 设置行高
         borrowDetailTable.getColumnModel().getColumn(0).setMaxWidth(100);
         borrowDetailTable.getColumnModel().getColumn(2).setMaxWidth(220);
@@ -137,7 +137,7 @@ public class MyInfoPage extends JFrame {
         borrowDetailJPanel.add(bookID);
 
         JTextField borrowIDJTextField = new JTextField();
-        borrowIDJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        borrowIDJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         borrowIDJTextField.setBounds(110, 420, 80, 40);
         borrowIDJTextField.setEditable(false); // 禁止输入
         borrowDetailJPanel.add(borrowIDJTextField);
@@ -149,7 +149,7 @@ public class MyInfoPage extends JFrame {
         borrowDetailJPanel.add(bookName);
 
         JTextField bookNameJTextField = new JTextField();
-        bookNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        bookNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         bookNameJTextField.setBounds(260, 420, 200, 40);
         bookNameJTextField.setEditable(false); // 禁止输入
         borrowDetailJPanel.add(bookNameJTextField);
@@ -161,7 +161,7 @@ public class MyInfoPage extends JFrame {
         borrowDetailJPanel.add(status);
 
         JTextField statusJTextField = new JTextField();
-        statusJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        statusJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         statusJTextField.setBounds(530, 420, 200, 40);
         statusJTextField.setEditable(false); // 禁止输入
         borrowDetailJPanel.add(statusJTextField);

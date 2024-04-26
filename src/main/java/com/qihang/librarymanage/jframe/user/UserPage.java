@@ -115,7 +115,7 @@ public class UserPage extends JFrame {
 
         bookInfoTable.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20)); // 设置表头字体
         bookInfoTable.getTableHeader().setReorderingAllowed(false); // 禁止拖动表的列
-        bookInfoTable.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        bookInfoTable.setFont(new Font("微软雅黑", Font.PLAIN, 17));
         bookInfoTable.setRowHeight(40); // 设置行高
         bookInfoTable.getColumnModel().getColumn(0).setMaxWidth(100);
 
@@ -136,7 +136,7 @@ public class UserPage extends JFrame {
         bookInfoJPanel.add(bookID);
 
         JTextField bookIDJTextField = new JTextField();
-        bookIDJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        bookIDJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         bookIDJTextField.setBounds(110, 420, 80, 40);
         bookIDJTextField.setEditable(false); // 禁止输入
         bookInfoJPanel.add(bookIDJTextField);
@@ -148,7 +148,7 @@ public class UserPage extends JFrame {
         bookInfoJPanel.add(bookName);
 
         JTextField bookNameJTextField = new JTextField();
-        bookNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        bookNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         bookNameJTextField.setBounds(260, 420, 200, 40);
         bookNameJTextField.setEditable(false); // 禁止输入
         bookInfoJPanel.add(bookNameJTextField);
@@ -160,7 +160,7 @@ public class UserPage extends JFrame {
         bookInfoJPanel.add(author);
 
         JTextField authorJTextField = new JTextField();
-        authorJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        authorJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
         authorJTextField.setBounds(530, 420, 200, 40);
         authorJTextField.setEditable(false); // 禁止输入
         bookInfoJPanel.add(authorJTextField);
