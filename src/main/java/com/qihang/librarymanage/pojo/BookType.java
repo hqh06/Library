@@ -28,4 +28,9 @@ public class BookType {
     public void setTypeRemark(String typeRemark) {
         this.typeRemark = typeRemark;
     }
+
+    @Override
+    public String toString() {
+        return typeName;
+    }
 }

@@ -26,7 +26,7 @@ public class Category {
     }
 
     /**
-     * 将图书类型添加到表格
+     * 初始化查询图书页面
      *
      * @return 表对象
      */
@@ -40,10 +40,10 @@ public class Category {
         CONTENTPANE.add(bookTypeInfoJPanel);
 
         // 类别名
-        JLabel categoryName = new JLabel("类别名:");
-        categoryName.setBounds(150, 50, 100, 40);
-        categoryName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        bookTypeInfoJPanel.add(categoryName);
+        JLabel bookTypeName = new JLabel("类别名:");
+        bookTypeName.setBounds(150, 50, 100, 40);
+        bookTypeName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        bookTypeInfoJPanel.add(bookTypeName);
 
         // 创建一个搜索框
         JTextField searchJTextField = new JTextField();
@@ -59,7 +59,10 @@ public class Category {
         searchJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                queryBookType(searchJTextField);
+                // 实例化BookType对象并添加值
+                BookType bookType = new BookType();
+                bookType.setTypeName(searchJTextField.getText().trim());
+                queryBookType(bookType);
             }
         });
 
@@ -98,13 +101,13 @@ public class Category {
         bookTypeInfoTable.setDefaultRenderer(Object.class, renderer);
         // 将表添加到滚动面板中
         bookInfoJScrollPane.setViewportView(bookTypeInfoTable);
-        queryBookType(null); // 初始化表
+        queryBookType(new BookType()); // 初始化表
 
         return bookTypeInfoTable;
     }
 
     /**
-     * 添加图书类型
+     * 初始化添加图书类型页面
      */
 
     public void add() {
@@ -123,59 +126,63 @@ public class Category {
         CONTENTPANE.add(bookTypeInfoJPanel);
 
         // 类别名称
-        JLabel categoryName = new JLabel("类别名称:");
-        categoryName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        categoryName.setBounds(30, 50, 100, 40);
-        bookTypeInfoJPanel.add(categoryName);
+        JLabel bookTypeName = new JLabel("类别名称:");
+        bookTypeName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        bookTypeName.setBounds(30, 50, 100, 40);
+        bookTypeInfoJPanel.add(bookTypeName);
         // 类别名称单行文本框
-        JTextField categoryJTextField = new JTextField();
-        categoryJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        categoryJTextField.setBounds(150, 50, 300, 40);
-        bookTypeInfoJPanel.add(categoryJTextField);
+        JTextField bookTypeNameJTextField = new JTextField();
+        bookTypeNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        bookTypeNameJTextField.setBounds(150, 50, 300, 40);
+        bookTypeInfoJPanel.add(bookTypeNameJTextField);
         // 类别描述
-        JLabel categoryDescribe = new JLabel("类别描述:");
-        categoryDescribe.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        categoryDescribe.setBounds(30, 130, 100, 40);
-        bookTypeInfoJPanel.add(categoryDescribe);
+        JLabel bookTypeDescribe = new JLabel("类别描述:");
+        bookTypeDescribe.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        bookTypeDescribe.setBounds(30, 130, 100, 40);
+        bookTypeInfoJPanel.add(bookTypeDescribe);
         // 类别描述多行文本框
-        JTextArea categoryDescribeJTextArea = new JTextArea();
-        categoryDescribeJTextArea.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        categoryDescribeJTextArea.setLineWrap(true); // 在达到JTextArea的宽度时自动换行
-        bookTypeInfoJPanel.add(categoryDescribeJTextArea);
+        JTextArea bookTypeDescribeJTextArea = new JTextArea();
+        bookTypeDescribeJTextArea.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        bookTypeDescribeJTextArea.setLineWrap(true); // 在达到JTextArea的宽度时自动换行
+        bookTypeInfoJPanel.add(bookTypeDescribeJTextArea);
 
         // 滚动面板
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(150, 130, 300, 120);
         // 禁用水平滚动条
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setViewportView(categoryDescribeJTextArea); // 将JTextArea添加到滚动面板中
+        scrollPane.setViewportView(bookTypeDescribeJTextArea); // 将JTextArea添加到滚动面板中
         bookTypeInfoJPanel.add(scrollPane);
 
         // 添加按钮
         JButton addJButton = new JButton("添加");
         addJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        addJButton.setBounds(150, 270, 300, 40);
+        addJButton.setBounds(150, 270, 140, 40);
         bookTypeInfoJPanel.add(addJButton);
         // 添加按钮监听
         addJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addBookType(categoryJTextField, categoryDescribeJTextArea);
+                // 实例化图书类型对象并设置对象属性
+                com.qihang.librarymanage.pojo.BookType bookType = new com.qihang.librarymanage.pojo.BookType();
+                bookType.setTypeName(bookTypeNameJTextField.getText().trim());
+                bookType.setTypeRemark(bookTypeDescribeJTextArea.getText().trim());
+                addBookType(bookType);
             }
         });
 
         // 重置按钮
         JButton resetJButton = new JButton("重置");
         resetJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        resetJButton.setBounds(490, 270, 80, 40);
+        resetJButton.setBounds(310, 270, 140, 40);
         bookTypeInfoJPanel.add(resetJButton);
         // 重置按钮监听
         resetJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 清空类别名称和类别描述
-                categoryJTextField.setText("");
-                categoryDescribeJTextArea.setText("");
+                bookTypeNameJTextField.setText("");
+                bookTypeDescribeJTextArea.setText("");
             }
         });
 
@@ -183,7 +190,7 @@ public class Category {
 
 
     /**
-     * 修改图书类型
+     * 初始化修改图书类型页面
      */
     public void modify() {
         JLabel title = new JLabel("类别修改");
@@ -207,6 +214,7 @@ public class Category {
         bookTypeID.setFont(new Font("微软雅黑", Font.PLAIN, 21));
         bookTypeID.setBounds(30, 30, 80, 40);
         bookTypeInfoJPanel.add(bookTypeID);
+
         // 编号文本框
         JTextField bookTypeIDJTextField = new JTextField();
         bookTypeIDJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
@@ -253,13 +261,13 @@ public class Category {
                 // 获取鼠标点击的行
                 int selectedRow = bookTypeInfoTable.getSelectedRow();
                 // 根据行和列获取表格中的值
-                Object bookId = bookTypeInfoTable.getValueAt(selectedRow, 0);
-                Object bookName = bookTypeInfoTable.getValueAt(selectedRow, 1);
-                Object bookStatus = bookTypeInfoTable.getValueAt(selectedRow, 2);
+                Object bookTypeID = bookTypeInfoTable.getValueAt(selectedRow, 0);
+                Object booKTypeName = bookTypeInfoTable.getValueAt(selectedRow, 1);
+                Object bookTypeRemark = bookTypeInfoTable.getValueAt(selectedRow, 2);
                 // 将获取的值加入文本框
-                bookTypeIDJTextField.setText(bookId.toString());
-                booKTypeNameJTextField.setText(bookName.toString());
-                bookTypeRemarkJTextArea.setText(bookStatus.toString());
+                bookTypeIDJTextField.setText(bookTypeID.toString());
+                booKTypeNameJTextField.setText(booKTypeName.toString());
+                bookTypeRemarkJTextArea.setText(bookTypeRemark.toString());
             }
         });
 
@@ -270,7 +278,12 @@ public class Category {
         modifyJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifyBookType(bookTypeIDJTextField, booKTypeNameJTextField, bookTypeRemarkJTextArea);
+                // 实例化图书类型对象并设置对象属性
+                com.qihang.librarymanage.pojo.BookType bookType = new com.qihang.librarymanage.pojo.BookType();
+                bookType.setId(Integer.valueOf(bookTypeIDJTextField.getText().trim()));
+                bookType.setTypeName(booKTypeNameJTextField.getText().trim());
+                bookType.setTypeRemark(bookTypeRemarkJTextArea.getText().trim());
+                modifyBookType(bookType);
             }
         });
 
@@ -278,16 +291,11 @@ public class Category {
     }
 
     /**
-     * 在数据库中查询图书类型
+     * 将数据库中查询的数据添加到查询图书页面
      *
-     * @param searchJTextField 搜索框对象
+     * @param bookType 图书类型对象
      */
-    public void queryBookType(JTextField searchJTextField) {
-        BookType bookType = new BookType();
-        // 不为空时设置
-        if (searchJTextField != null) {
-            bookType.setTypeName(searchJTextField.getText().trim());
-        }
+    public void queryBookType(BookType bookType) {
 
         // 设置行数为0每次查询前清空表上一次的数据
         defaultTableModel.setRowCount(0);
@@ -298,8 +306,7 @@ public class Category {
         try {
             connection = databaseConnect.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
-            // 调用dao包 查询图书类型
-            ResultSet resultSet = bookTypeDao.categoryQuery(connection, bookType);
+            ResultSet resultSet = bookTypeDao.bookTypeQuery(connection, bookType);
             while (resultSet.next()) {
                 Vector<String> rowData = new Vector<>();
                 rowData.add(String.valueOf(resultSet.getInt("id")));
@@ -317,24 +324,18 @@ public class Category {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
-
     }
 
     /**
-     * 将文本框中的内容添加到数据库
+     * 将新的图书类别添加到数据库
      *
-     * @param categoryJTextField        类别名称文本框的对象
-     * @param categoryDescribeJTextArea 类别描述文本框的对象
+     * @param bookType 图书类型对象
      */
-    public void addBookType(JTextField categoryJTextField, JTextArea categoryDescribeJTextArea) {
+    public void addBookType(com.qihang.librarymanage.pojo.BookType bookType) {
 
-        String category = categoryJTextField.getText();
-        String categoryDescribe = categoryDescribeJTextArea.getText();
         // 去除前后空格为空
-        if (category.trim().isEmpty() || categoryDescribe.trim().isEmpty()) {
+        if (bookType.getTypeName().isEmpty() || bookType.getTypeRemark().isEmpty()) {
             JOptionPane.showMessageDialog(null, "请输入相关信息");
             return;
         }
@@ -343,16 +344,14 @@ public class Category {
         try {
             // 获取数据库连接
             connection = databaseConnect.getConnection();
-            // 调用dao包 添加图书类型
+
+            // 实例化BookTypeDao对象并调用添加方法
             BookTypeDao bookTypeDao = new BookTypeDao();
-            int result = bookTypeDao.categoryAdd(connection, category, categoryDescribe);
+            int result = bookTypeDao.bookTypeAdd(connection, bookType);
             if (result == 1) {
                 JOptionPane.showMessageDialog(null, "添加成功");
-                // 添加成功清空类别名称和类别描述
-                categoryJTextField.setText("");
-                categoryDescribeJTextArea.setText("");
                 // 重新刷新表格
-                queryBookType(null);
+                queryBookType(new BookType());
 
             } else if (result == 2) {
                 JOptionPane.showMessageDialog(null, "添加失败，类别重复");
@@ -371,16 +370,17 @@ public class Category {
         }
     }
 
-    public void modifyBookType(JTextField bookTypeID, JTextField booKTypeName, JTextArea bookTypeRemarkJTextArea) {
-        // 检查 bookTypeID, booKTypeName, 和 bookTypeRemark 文本框是否为空
-        if (bookTypeID.getText().isEmpty() || booKTypeName.getText().isEmpty() || bookTypeRemarkJTextArea.getText().isEmpty()) {
+    /**
+     * 将文本框中的内容根据图书类型ID在数据库进行修改对应的值
+     *
+     * @param bookType 图书类型对象
+     */
+    public void modifyBookType(com.qihang.librarymanage.pojo.BookType bookType) {
+        // 检查 booKTypeName, 和 bookTypeRemark 文本框是否为空
+        if (bookType.getTypeName().isEmpty() || bookType.getTypeRemark().isEmpty()) {
             JOptionPane.showMessageDialog(null, "请输入相关信息");
             return;
         }
-        BookType bookType = new BookType();
-        bookType.setId(Integer.valueOf(bookTypeID.getText().trim()));
-        bookType.setTypeName(booKTypeName.getText().trim());
-        bookType.setTypeRemark(bookTypeRemarkJTextArea.getText().trim());
 
         // 创建一个DatabaseConnect 对象
         DatabaseConnect databaseConnect = new DatabaseConnect();
@@ -391,13 +391,13 @@ public class Category {
         try {
             // 获取数据库连接
             connection = databaseConnect.getConnection();
-
+            // 实例化BookTypeDao对象并调用修改方法
             BookTypeDao bookTypeDao = new BookTypeDao();
-            int result = bookTypeDao.categoryModify(connection, bookType);
+            int result = bookTypeDao.bookTypeModify(connection, bookType);
             if (result == 1) {
                 JOptionPane.showMessageDialog(null, "修改成功");
                 // 修改成功后重新加载表
-                queryBookType(null);
+                queryBookType(new BookType());
             } else {
                 JOptionPane.showMessageDialog(null, "修改失败");
             }

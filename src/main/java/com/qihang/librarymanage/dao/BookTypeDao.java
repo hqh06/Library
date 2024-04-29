@@ -11,17 +11,16 @@ public class BookTypeDao {
     /**
      * 添加图书类型
      *
-     * @param connection       数据库连接
-     * @param category         类别名称
-     * @param categoryDescribe 类别描述信息
+     * @param connection 数据库连接
+     * @param bookType   图书类型对象
      * @return 1 成功 2 重复
      * @throws SQLException 插入失败抛出 SQLException
      */
-    public int categoryAdd(Connection connection, String category, String categoryDescribe) throws SQLException {
+    public int bookTypeAdd(Connection connection, BookType bookType) throws SQLException {
         // 查询图书类型是否已存在
         String sqlQuery = "select * from book_type where type_name=?";
         PreparedStatement queryStatement = connection.prepareStatement(sqlQuery);
-        queryStatement.setString(1, category);
+        queryStatement.setString(1, bookType.getTypeName());
         ResultSet resultSet = queryStatement.executeQuery();
         if (resultSet.next()) {
             return 2;
@@ -30,8 +29,8 @@ public class BookTypeDao {
         // 添加图书类型
         String sqlAdd = "insert into book_type(type_name, type_remark) values(?,?)";
         PreparedStatement addStatement = connection.prepareStatement(sqlAdd);
-        addStatement.setString(1, category);
-        addStatement.setString(2, categoryDescribe);
+        addStatement.setString(1, bookType.getTypeName());
+        addStatement.setString(2, bookType.getTypeRemark());
         return addStatement.executeUpdate();
     }
 
@@ -44,7 +43,7 @@ public class BookTypeDao {
      * @return 返回查询结果
      * @throws SQLException 查询失败抛出 SQLException
      */
-    public ResultSet categoryQuery(Connection connection, BookType bookType) throws SQLException {
+    public ResultSet bookTypeQuery(Connection connection, BookType bookType) throws SQLException {
         // 定义一个默认的 SQL 查询语句，用于从 book_type 表中选择所有记录
         String sql = "select * from book_type";
 
@@ -52,6 +51,7 @@ public class BookTypeDao {
             // 根据类型名查询
             sql += " where type_name like ?";
         }
+
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -73,7 +73,7 @@ public class BookTypeDao {
      * @return 1 成功 0 失败
      * @throws SQLException 修改失败抛出 SQLException
      */
-    public int categoryModify(Connection connection, BookType bookType) throws SQLException {
+    public int bookTypeModify(Connection connection, BookType bookType) throws SQLException {
         // 定义一个 SQL 更新语句，用于更新 book_type 表中的记录
         String sql = "update book_type set type_name=?,type_remark=? where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
