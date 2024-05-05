@@ -17,7 +17,7 @@ public class BookDao {
      */
 
     public ResultSet queryBook(Connection connection, Book book) throws SQLException {
-        StringBuilder sql = new StringBuilder("select book.id,book_name,author,publish,number,book_remark,type_name" +
+        StringBuilder sql = new StringBuilder("select book.id,book_name,author,publish,number,book_remark,type_name,type_id" +
                 " from book join book_type on book.type_id=book_type.id where 1=1 ");
         // 书名不为空根据书名查询类容
         if (book.getBookName() != null){
@@ -42,6 +42,48 @@ public class BookDao {
         }
 
         return preparedStatement.executeQuery();
+    }
+
+
+    public int addBook(Connection connection, Book book) throws SQLException {
+        String querySql = "select * from book where book_name=?";
+        PreparedStatement qeryPreparedStatement = connection.prepareStatement(querySql);
+        qeryPreparedStatement.setString(1, book.getBookName());
+        ResultSet resultSet = qeryPreparedStatement.executeQuery();
+        if (resultSet.next()){
+            return 2;
+        }
+        String sql = "insert into book(book_name,author,publish,number,book_remark,type_id) values(?,?,?,?,?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, book.getBookName());
+        preparedStatement.setString(2, book.getAuthor());
+        preparedStatement.setString(3, book.getPublish());
+        preparedStatement.setInt(4, book.getNumber());
+        preparedStatement.setString(5, book.getBookRemark());
+        preparedStatement.setInt(6, book.getTypeId());
+        return preparedStatement.executeUpdate();
+
+    }
+
+    public int modifyBook(Connection connection, Book book) throws SQLException {
+        String sql = "update book set book_name=?, author=?, publish=?, number=?, book_remark=?, type_id=? where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, book.getBookName());
+        preparedStatement.setString(2, book.getAuthor());
+        preparedStatement.setString(3, book.getPublish());
+        preparedStatement.setInt(4, book.getNumber());
+        preparedStatement.setString(5, book.getBookRemark());
+        preparedStatement.setInt(6, book.getTypeId());
+        preparedStatement.setInt(7, book.getId());
+        return preparedStatement.executeUpdate();
+
+    }
+
+    public int deleteBook(Connection connection, Book book) throws SQLException {
+        String sql = "delete from book where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, book.getId());
+        return preparedStatement.executeUpdate();
     }
 
 }

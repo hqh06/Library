@@ -81,6 +81,16 @@ public class AdminPage extends JFrame {
         JMenuItem bookModify = new JMenuItem("书籍修改");
         bookModify.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         bookMenu.add(bookModify);
+        bookModify.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 清除当前容器中所有的内容并刷新
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                new BookInfo(getContentPane()).modify();
+            }
+        });
 
 
         JMenu userMenu = new JMenu("用户管理");
