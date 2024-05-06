@@ -45,7 +45,7 @@ public class AdminPage extends JFrame {
             }
         });
 
-        JMenuItem categoryModify = new JMenuItem("类别修改");
+        JMenuItem categoryModify = new JMenuItem("类别更新");
         categoryModify.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         categoryMenu.add(categoryModify);
         categoryModify.addActionListener(new ActionListener() {
@@ -78,7 +78,7 @@ public class AdminPage extends JFrame {
             }
         });
 
-        JMenuItem bookModify = new JMenuItem("书籍修改");
+        JMenuItem bookModify = new JMenuItem("书籍更新");
         bookModify.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         bookMenu.add(bookModify);
         bookModify.addActionListener(new ActionListener() {
@@ -97,15 +97,35 @@ public class AdminPage extends JFrame {
         userMenu.setFont(new Font("微软雅黑", Font.PLAIN, 22));
         menuBar.add(userMenu);
 
-        JMenuItem userInfo = new JMenuItem("用户信息");
+        JMenuItem userInfo = new JMenuItem("用户添加");
         userInfo.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         userMenu.add(userInfo);
+        userInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 清除当前容器中所有的内容并刷新
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                new UserInfo(getContentPane()).add();
+            }
+        });
 
-        JMenuItem userBorrowInfo = new JMenuItem("借阅信息");
-        userBorrowInfo.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        userMenu.add(userBorrowInfo);
+        JMenuItem userUpdate = new JMenuItem("用户更新");
+        userUpdate.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        userMenu.add(userUpdate);
+        userUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 清除当前容器中所有的内容并刷新
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                new UserInfo(getContentPane()).modify();
+            }
+        });
 
-        new BookInfo(getContentPane()).add(); //测试
+        new UserInfo(getContentPane()).add(); //测试
 
         setVisible(true);
     }

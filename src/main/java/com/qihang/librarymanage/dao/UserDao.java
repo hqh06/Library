@@ -17,18 +17,32 @@ public class UserDao {
      * @return 返回一个User对象
      * @throws SQLException 抛出sql异常
      */
-    public ArrayList<User> loginUser(Connection connection, User user) throws SQLException {
-        String sql = "select * from user where user_account=? and password=? and role=?";
+    public ArrayList<User> queryUser(Connection connection, User user) throws SQLException {
+
+        String sql;
+        // 如果用户名为空，则查询所有用户
+        if (user.getUserName() == null) {
+            sql = "select * from user";
+        } else {
+            // 否则，根据账号、密码和角色查询用户
+            sql = "select * from user where user_account=? and password=? and role=?";
+        }
+
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, user.getUserAccount());
-        preparedStatement.setString(2, user.getPassword());
-        preparedStatement.setInt(3, user.getRole());
-        // 查询
+        // 如果用户名不为空，则设置查询参数
+        if (user.getUserName() != null) {
+            preparedStatement.setString(1, user.getUserAccount());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, user.getRole());
+        }
+
+        // 执行查询
         ResultSet resultSet = preparedStatement.executeQuery();
 
         ArrayList<User> users = new ArrayList<>();
-        // 如果查询的值不为空则往resultUser对象中保存查询到的值
+
         while (resultSet.next()) {
+            // 提取并设置用户信息
             User userTemp = new User();
             userTemp.setId(resultSet.getInt("id"));
             userTemp.setUserAccount(resultSet.getString("user_account"));
@@ -44,6 +58,7 @@ public class UserDao {
 
     /**
      * 注册校验
+     *
      * @param connection 数据库的连接对象
      * @param user       实体类的对象
      * @return 0注册失败  1注册成功 2代表已注册
