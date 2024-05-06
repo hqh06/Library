@@ -194,7 +194,7 @@ public class Category {
      * 初始化修改图书类型页面
      */
     public void modify() {
-        JLabel title = new JLabel("类别修改");
+        JLabel title = new JLabel("类别更新");
         title.setFont(new Font("微软雅黑", Font.PLAIN, 30));
         title.setBounds(600, 30, 300, 32);
         CONTENTPANE.add(title);
