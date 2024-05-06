@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Category {
@@ -306,12 +307,12 @@ public class Category {
         try {
             connection = databaseUtils.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
-            ResultSet resultSet = bookTypeDao.bookTypeQuery(connection, bookType);
-            while (resultSet.next()) {
+            ArrayList<BookType> bookTypes = bookTypeDao.bookTypeQuery(connection, bookType);
+            for (BookType type : bookTypes) {
                 Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(resultSet.getInt("id")));
-                rowData.add(resultSet.getString("type_name"));
-                rowData.add(resultSet.getString("type_remark"));
+                rowData.add(String.valueOf(type.getId()));
+                rowData.add(type.getTypeName());
+                rowData.add(type.getTypeRemark());
                 defaultTableModel.addRow(rowData);
             }
 

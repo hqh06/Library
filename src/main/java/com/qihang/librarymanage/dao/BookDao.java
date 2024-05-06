@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class BookDao {
     /**
@@ -16,16 +17,15 @@ public class BookDao {
      * @throws SQLException 抛出sql异常
      */
 
-    public ResultSet queryBook(Connection connection, Book book) throws SQLException {
-        StringBuilder sql = new StringBuilder("select book.id,book_name,author,publish,number,book_remark,type_name,type_id" +
-                " from book join book_type on book.type_id=book_type.id where 1=1 ");
+    public ArrayList<Book> queryBook(Connection connection, Book book) throws SQLException {
+        StringBuilder sql = new StringBuilder("select * from book where 1=1");
         // 书名不为空根据书名查询类容
         if (book.getBookName() != null){
-            sql.append(" and book.book_name like ?");
+            sql.append(" and book_name like ?");
         }
         // 作者不为空根据作者查询类容
         if (book.getAuthor() != null){
-            sql.append(" and book.author like ?");
+            sql.append(" and author like ?");
         }
         // 当书名和作者都为空时则查询所有类容
         PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
@@ -40,8 +40,23 @@ public class BookDao {
         if (book.getAuthor() != null){
             preparedStatement.setString(parameterIndex, "%" + book.getAuthor() + "%");
         }
+        ResultSet resultSet = preparedStatement.executeQuery();
 
-        return preparedStatement.executeQuery();
+        ArrayList<Book> books = new ArrayList<>();
+        // 获取查询到的所有图书
+        while (resultSet.next()) {
+            Book bookTemp = new Book();
+            bookTemp.setId(resultSet.getInt("id"));
+            bookTemp.setBookName(resultSet.getString("book_name"));
+            bookTemp.setAuthor(resultSet.getString("author"));
+            bookTemp.setPublish(resultSet.getString("publish"));
+            bookTemp.setTypeId(resultSet.getInt("type_id"));
+            bookTemp.setNumber(resultSet.getInt("number"));
+            bookTemp.setBookRemark(resultSet.getString("book_remark"));
+            books.add(bookTemp);
+        }
+
+        return books;
     }
 
 

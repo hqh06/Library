@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class BookTypeDao {
     /**
@@ -43,7 +44,7 @@ public class BookTypeDao {
      * @return 返回查询结果
      * @throws SQLException 查询失败抛出 SQLException
      */
-    public ResultSet bookTypeQuery(Connection connection, BookType bookType) throws SQLException {
+    public ArrayList<BookType> bookTypeQuery(Connection connection, BookType bookType) throws SQLException {
         // 定义一个默认的 SQL 查询语句，用于从 book_type 表中选择所有记录
         String sql = "select * from book_type";
 
@@ -51,7 +52,6 @@ public class BookTypeDao {
             // 根据类型名查询
             sql += " where type_name like ?";
         }
-
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -62,7 +62,17 @@ public class BookTypeDao {
         }
 
         // 执行 SQL 查询，并返回查询结果
-        return preparedStatement.executeQuery();
+        ArrayList<BookType> bookTypes = new ArrayList<>();
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            BookType bookTypeTemp = new BookType();
+            bookTypeTemp.setId(resultSet.getInt("id"));
+            bookTypeTemp.setTypeName(resultSet.getString("type_name"));
+            bookTypeTemp.setTypeRemark(resultSet.getString("type_remark"));
+            bookTypes.add(bookTypeTemp);
+        }
+        return bookTypes;
     }
 
     /**

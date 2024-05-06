@@ -504,15 +504,7 @@ public class BookInfo {
             // 获取数据库连接
             connection = databaseUtils.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
-            ResultSet resultSet = bookTypeDao.bookTypeQuery(connection, new BookType()); // 传入一个空BookType获取全部图书类型
-
-            while (resultSet.next()) {
-                BookType bookType = new BookType();
-                bookType.setId(resultSet.getInt("id"));
-                bookType.setTypeName(resultSet.getString("type_name"));
-                bookTypes.add(bookType);
-            }
-
+            bookTypes = bookTypeDao.bookTypeQuery(connection, new BookType());// 传入一个空BookType获取全部图书类型
 
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
@@ -549,20 +541,8 @@ public class BookInfo {
             connection = databaseUtils.getConnection();
             // 实例化BookDao对象并调用图书查询方法
             BookDao bookDao = new BookDao();
-            ResultSet resultSet = bookDao.queryBook(connection, book);
-            ArrayList<Book> books = new ArrayList<>();
-            // 获取查询到的所有图书
-            while (resultSet.next()) {
-                Book bookTemp = new Book();
-                bookTemp.setId(resultSet.getInt("id"));
-                bookTemp.setBookName(resultSet.getString("book_name"));
-                bookTemp.setAuthor(resultSet.getString("author"));
-                bookTemp.setPublish(resultSet.getString("publish"));
-                bookTemp.setTypeId(resultSet.getInt("type_id"));
-                bookTemp.setNumber(resultSet.getInt("number"));
-                bookTemp.setBookRemark(resultSet.getString("book_remark"));
-                books.add(bookTemp);
-            }
+            ArrayList<Book> books = bookDao.queryBook(connection, book);
+
             // 查询所有的图书类型
             ArrayList<BookType> bookTypes = showBookType();
             for (Book bookTemp : books) {
@@ -643,6 +623,7 @@ public class BookInfo {
 
     /**
      * 连接数据库并修改图书
+     *
      * @param book 图书对象
      */
     public void modifyBook(Book book) {
@@ -661,7 +642,7 @@ public class BookInfo {
                 JOptionPane.showMessageDialog(null, "修改成功");
                 // 刷新表格
                 queryBook(new Book());
-            }else {
+            } else {
                 JOptionPane.showMessageDialog(null, "修改失败");
             }
         } catch (Exception e) {
@@ -680,6 +661,7 @@ public class BookInfo {
 
     /**
      * 连接数据库并删除图书
+     *
      * @param book 图书对象
      */
     public void deleteBook(Book book) {
@@ -694,11 +676,11 @@ public class BookInfo {
             connection = databaseUtils.getConnection();
             BookDao bookDao = new BookDao();
             int result = bookDao.deleteBook(connection, book);
-            if (result>0){
+            if (result > 0) {
                 JOptionPane.showMessageDialog(null, "删除成功");
                 // 刷新页面
                 queryBook(new Book());
-            }else {
+            } else {
                 JOptionPane.showMessageDialog(null, "删除失败");
             }
         } catch (Exception e) {

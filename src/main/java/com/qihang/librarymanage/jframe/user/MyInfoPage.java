@@ -2,6 +2,7 @@ package com.qihang.librarymanage.jframe.user;
 
 import com.qihang.librarymanage.dao.BorrowDetailDao;
 import com.qihang.librarymanage.pojo.Book;
+import com.qihang.librarymanage.pojo.BookBorrowDetail;
 import com.qihang.librarymanage.pojo.BorrowDetail;
 import com.qihang.librarymanage.pojo.User;
 import com.qihang.librarymanage.utils.DatabaseUtils;
@@ -20,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class MyInfoPage extends JFrame {
@@ -241,21 +243,16 @@ public class MyInfoPage extends JFrame {
             connection = connect.getConnection();
             BorrowDetailDao borrowDetailDao = new BorrowDetailDao();
 
-            ResultSet resultSet = borrowDetailDao.queryBorrowDetail(connection, borrowDetail,book, user);
+            ArrayList<BookBorrowDetail> bookBorrowDetails = borrowDetailDao.queryBorrowDetail(connection, borrowDetail, book, user);
+
             // 将数据库中查询到的表数据加载到表格中
-            while (resultSet.next()) {
-                String status = resultSet.getString("status");
-                if (status.equals("0")) {
-                    status = "在借";
-                } else {
-                    status = "已还";
-                }
+            for (BookBorrowDetail bookBorrowDetail : bookBorrowDetails) {
                 Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(resultSet.getInt("id")));
-                rowData.add(resultSet.getString("book_name"));
-                rowData.add(status);
-                rowData.add(resultSet.getString("borrow_time"));
-                rowData.add(resultSet.getString("return_time"));
+                rowData.add(String.valueOf(bookBorrowDetail.getId()));
+                rowData.add(bookBorrowDetail.getBookName());
+                rowData.add(bookBorrowDetail.getStatus());
+                rowData.add(bookBorrowDetail.getBorrowTime());
+                rowData.add(bookBorrowDetail.getReturnTime());
                 defaultTableModel.addRow(rowData);
             }
 

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserDao {
     /**
@@ -16,14 +17,28 @@ public class UserDao {
      * @return 返回一个User对象
      * @throws SQLException 抛出sql异常
      */
-    public ResultSet loginUser(Connection connection, User user) throws SQLException {
+    public ArrayList<User> loginUser(Connection connection, User user) throws SQLException {
         String sql = "select * from user where user_account=? and password=? and role=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, user.getUserAccount());
         preparedStatement.setString(2, user.getPassword());
         preparedStatement.setInt(3, user.getRole());
         // 查询
-        return preparedStatement.executeQuery();
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        ArrayList<User> users = new ArrayList<>();
+        // 如果查询的值不为空则往resultUser对象中保存查询到的值
+        while (resultSet.next()) {
+            User userTemp = new User();
+            userTemp.setId(resultSet.getInt("id"));
+            userTemp.setUserAccount(resultSet.getString("user_account"));
+            userTemp.setUserName(resultSet.getString("user_name"));
+            userTemp.setRole(resultSet.getInt("role"));
+            userTemp.setSex(resultSet.getInt("sex"));
+            userTemp.setPhone(resultSet.getString("phone"));
+            users.add(userTemp);
+        }
+        return users;
 
     }
 

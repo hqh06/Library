@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Login extends JFrame {
     public Login() {
@@ -29,7 +30,7 @@ public class Login extends JFrame {
 
         JLabel account = new JLabel("账号:");
         account.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        account.setBounds(150,230,60,30);
+        account.setBounds(150, 230, 60, 30);
         getContentPane().add(account);
         // 账号文本框
         JTextField accountText = new JTextField();
@@ -63,7 +64,7 @@ public class Login extends JFrame {
 
 
         JButton loginButton = new JButton("登录");
-        loginButton.setBounds(150,380,120,40);
+        loginButton.setBounds(150, 380, 120, 40);
         loginButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         getContentPane().add(loginButton);
         // 监听登录事件
@@ -75,7 +76,7 @@ public class Login extends JFrame {
         });
 
         JButton registerButton = new JButton("注册");
-        registerButton.setBounds(300,380,120,40);
+        registerButton.setBounds(300, 380, 120, 40);
         registerButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         getContentPane().add(registerButton);
         // 监听注册事件
@@ -138,29 +139,23 @@ public class Login extends JFrame {
             connection = dbConnect.getConnection();
             // 查询用户
             UserDao userDao = new UserDao();
-            ResultSet resultSet = userDao.loginUser(connection, user);
-            User resultUser = new User();
-            // 如果查询的值不为空则往resultUser对象中保存查询到的值
-            if (resultSet.next()) {
-                resultUser.setId(resultSet.getInt("id"));
-                resultUser.setUserAccount(resultSet.getString("user_account"));
-                resultUser.setUserName(resultSet.getString("user_name"));
-                resultUser.setRole(resultSet.getInt("role"));
-                resultUser.setSex(resultSet.getInt("sex"));
-                resultUser.setPhone(resultSet.getString("phone"));
-            }
-            // 如果对象中的值为null则在数据库中未查到该用户
-            if (resultUser.getId() == null) {
-                JOptionPane.showMessageDialog(null, "账号或密码错误");
-            } else {
-                // 根据返回值判断是管理员还是普通用户则执行不同的页面
-                if (resultUser.getRole() == 0) {
-                    System.out.println("管理员");
+            ArrayList<User> users = userDao.loginUser(connection, user);
+
+            for (User userTemp : users) {
+                // 如果对象中的值为null则在数据库中未查到该用户
+                if (userTemp.getId() == null) {
+                    JOptionPane.showMessageDialog(null, "账号或密码错误");
                 } else {
-                    this.dispose(); // 关闭登录页面
-                    new UserPage(resultUser); // 创建用户页面
+                    // 根据返回值判断是管理员还是普通用户则执行不同的页面
+                    if (userTemp.getRole() == 0) {
+                        System.out.println("管理员");
+                    } else {
+                        this.dispose(); // 关闭登录页面
+                        new UserPage(userTemp); // 创建用户页面
+                    }
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

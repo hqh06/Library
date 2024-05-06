@@ -1,8 +1,10 @@
 package com.qihang.librarymanage.jframe.user;
 
 import com.qihang.librarymanage.dao.BookDao;
+import com.qihang.librarymanage.dao.BookTypeDao;
 import com.qihang.librarymanage.dao.BorrowDetailDao;
 import com.qihang.librarymanage.pojo.Book;
+import com.qihang.librarymanage.pojo.BookType;
 import com.qihang.librarymanage.pojo.BorrowDetail;
 import com.qihang.librarymanage.pojo.User;
 import com.qihang.librarymanage.utils.DatabaseUtils;
@@ -21,6 +23,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Vector;
 
 public class UserPage extends JFrame {
@@ -233,18 +237,22 @@ public class UserPage extends JFrame {
             // 获取数据连接
             connection = connect.getConnection();
             BookDao bookDao = new BookDao();
-            ResultSet resultSet = bookDao.queryBook(connection, book);
+            BookTypeDao bookTypeDao = new BookTypeDao();
+            ArrayList<Book> books = bookDao.queryBook(connection, book);
+            ArrayList<BookType> bookTypes = bookTypeDao.bookTypeQuery(connection, new BookType());// 传一个空对象查询所有
             // 将数据库中查询到的表数据加载到表格中
-            while (resultSet.next()) {
+            for (Book bookTemp : books) {
                 Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(resultSet.getInt("id")));
-                rowData.add(resultSet.getString("book_name"));
-                rowData.add(resultSet.getString("author"));
-                rowData.add(resultSet.getString("type_name"));
-                rowData.add(resultSet.getString("publish"));
+                rowData.add(String.valueOf(bookTemp.getId()));
+                rowData.add(bookTemp.getBookName());
+                rowData.add(bookTemp.getAuthor());
+                for (BookType bookType : bookTypes) {
+                    if (Objects.equals(bookType.getId(), bookTemp.getTypeId()))
+                        rowData.add(bookType.getTypeName());
+                }
+                rowData.add(bookTemp.getPublish());
                 defaultTableModel.addRow(rowData);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -1,6 +1,7 @@
 package com.qihang.librarymanage.dao;
 
 import com.qihang.librarymanage.pojo.Book;
+import com.qihang.librarymanage.pojo.BookBorrowDetail;
 import com.qihang.librarymanage.pojo.BorrowDetail;
 import com.qihang.librarymanage.pojo.User;
 
@@ -8,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class BorrowDetailDao {
     /**
@@ -63,7 +66,7 @@ public class BorrowDetailDao {
      * @throws SQLException 抛出sql异常
      */
 
-    public ResultSet queryBorrowDetail(Connection connection, BorrowDetail borrowDetail, Book book, User user) throws SQLException {
+    public ArrayList<BookBorrowDetail> queryBorrowDetail(Connection connection, BorrowDetail borrowDetail, Book book, User user) throws SQLException {
         StringBuilder sql = new StringBuilder("select b.id,book.book_name,b.status,b.borrow_time," +
                 "b.return_time from borrow_detail as b " +
                 "inner join book on b.book_id=book.id WHERE b.user_id=?");
@@ -91,7 +94,24 @@ public class BorrowDetailDao {
             preparedStatement.setString(parameterIndex, "%" + book.getBookName() + "%");
         }
 
-        return preparedStatement.executeQuery();
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<BookBorrowDetail> bookBorrowDetails = new ArrayList<>();
+        while (resultSet.next()){
+            String status = resultSet.getString("status");
+            if (status.equals("0")) {
+                status = "在借";
+            } else {
+                status = "已还";
+            }
+            BookBorrowDetail bookBorrowDetail = new BookBorrowDetail();
+            bookBorrowDetail.setId(resultSet.getInt("id"));
+            bookBorrowDetail.setBookName(resultSet.getString("book_name"));
+            bookBorrowDetail.setStatus(status);
+            bookBorrowDetail.setBorrowTime(resultSet.getString("borrow_time"));
+            bookBorrowDetail.setReturnTime(resultSet.getString("return_time"));
+            bookBorrowDetails.add(bookBorrowDetail);
+        }
+        return bookBorrowDetails;
 
     }
 }
