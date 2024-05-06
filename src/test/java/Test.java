@@ -1,5 +1,5 @@
-import com.qihang.librarymanage.utlis.DatabaseConnect;
-import com.qihang.librarymanage.utlis.Theme;
+import com.qihang.librarymanage.utils.DatabaseUtils;
+import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,21 +36,21 @@ public class Test extends JFrame {
 
     public void shujuku(){
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
             e.printStackTrace();
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();

@@ -4,7 +4,7 @@ import com.qihang.librarymanage.dao.BookDao;
 import com.qihang.librarymanage.dao.BookTypeDao;
 import com.qihang.librarymanage.pojo.Book;
 import com.qihang.librarymanage.pojo.BookType;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
+import com.qihang.librarymanage.utils.DatabaseUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -493,7 +493,7 @@ public class BookInfo {
      */
     public ArrayList<BookType> showBookType() {
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
@@ -502,7 +502,7 @@ public class BookInfo {
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
             ResultSet resultSet = bookTypeDao.bookTypeQuery(connection, new BookType()); // 传入一个空BookType获取全部图书类型
 
@@ -520,7 +520,7 @@ public class BookInfo {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();
@@ -539,14 +539,14 @@ public class BookInfo {
         defaultTableModel.setRowCount(0);
 
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             // 实例化BookDao对象并调用图书查询方法
             BookDao bookDao = new BookDao();
             ResultSet resultSet = bookDao.queryBook(connection, book);
@@ -591,7 +591,7 @@ public class BookInfo {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();
@@ -607,14 +607,14 @@ public class BookInfo {
      */
     public void addBook(Book book) {
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
 
             BookDao bookDao = new BookDao();
             int result = bookDao.addBook(connection, book);
@@ -633,7 +633,7 @@ public class BookInfo {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();
@@ -647,14 +647,14 @@ public class BookInfo {
      */
     public void modifyBook(Book book) {
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BookDao bookDao = new BookDao();
             int result = bookDao.modifyBook(connection, book);
             if (result > 0) {
@@ -670,7 +670,7 @@ public class BookInfo {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();
@@ -684,14 +684,14 @@ public class BookInfo {
      */
     public void deleteBook(Book book) {
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BookDao bookDao = new BookDao();
             int result = bookDao.deleteBook(connection, book);
             if (result>0){
@@ -707,7 +707,7 @@ public class BookInfo {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();

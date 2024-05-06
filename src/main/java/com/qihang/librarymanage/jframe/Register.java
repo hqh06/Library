@@ -2,7 +2,7 @@ package com.qihang.librarymanage.jframe;
 
 import com.qihang.librarymanage.dao.UserDao;
 import com.qihang.librarymanage.pojo.User;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
+import com.qihang.librarymanage.utils.DatabaseUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -229,10 +229,10 @@ public class Register extends JFrame {
         user.setSex(gender);
         user.setRole(1); // 所有用户默认为普通用户管理员不可注册
 
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
         try {
             // 获取一个数据连接
-            Connection connection = databaseConnect.getConnection();
+            Connection connection = databaseUtils.getConnection();
             UserDao userDao = new UserDao();
             int result = userDao.registerUser(connection, user);
             // 如果返回值为2代表该账号已经注册

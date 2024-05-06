@@ -1,4 +1,4 @@
-package com.qihang.librarymanage.utlis;
+package com.qihang.librarymanage.utils;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;

@@ -5,8 +5,8 @@ import com.qihang.librarymanage.dao.BorrowDetailDao;
 import com.qihang.librarymanage.pojo.Book;
 import com.qihang.librarymanage.pojo.BorrowDetail;
 import com.qihang.librarymanage.pojo.User;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
-import com.qihang.librarymanage.utlis.Theme;
+import com.qihang.librarymanage.utils.DatabaseUtils;
+import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -227,7 +227,7 @@ public class UserPage extends JFrame {
 
         // 设置行数为0每次查询前清空表上一次的数据
         defaultTableModel.setRowCount(0);
-        DatabaseConnect connect = new DatabaseConnect();
+        DatabaseUtils connect = new DatabaseUtils();
         Connection connection = null;
         try {
             // 获取数据连接
@@ -280,11 +280,11 @@ public class UserPage extends JFrame {
         borrowDetail.setBorrowTime(String.valueOf(timestamp)); // 借阅时间
 
         // 数据库连接对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
         Connection connection = null;
         try {
             // 获取数据连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BorrowDetailDao borrowDetailDao = new BorrowDetailDao();
             int result = borrowDetailDao.insertDetail(connection, borrowDetail);
             if (result == 0) {
@@ -298,7 +298,7 @@ public class UserPage extends JFrame {
             e.printStackTrace();
         } finally {
             try {
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

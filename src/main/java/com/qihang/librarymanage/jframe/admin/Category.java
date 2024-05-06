@@ -2,7 +2,7 @@ package com.qihang.librarymanage.jframe.admin;
 
 import com.qihang.librarymanage.dao.BookTypeDao;
 import com.qihang.librarymanage.pojo.BookType;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
+import com.qihang.librarymanage.utils.DatabaseUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -301,10 +301,10 @@ public class Category {
         defaultTableModel.setRowCount(0);
 
         // 先查询所有的类别信息添加到表格中
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
         Connection connection = null;
         try {
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
             ResultSet resultSet = bookTypeDao.bookTypeQuery(connection, bookType);
             while (resultSet.next()) {
@@ -320,7 +320,7 @@ public class Category {
         } finally {
             try {
                 // 关闭连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -339,11 +339,11 @@ public class Category {
             JOptionPane.showMessageDialog(null, "请输入相关信息");
             return;
         }
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
         Connection connection = null;
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
 
             // 实例化BookTypeDao对象并调用添加方法
             BookTypeDao bookTypeDao = new BookTypeDao();
@@ -363,7 +363,7 @@ public class Category {
             JOptionPane.showMessageDialog(null, "添加失败");
         } finally {
             try {
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -383,14 +383,14 @@ public class Category {
         }
 
         // 创建一个DatabaseConnect 对象
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
 
         // 初始化一个 Connection 对象，用于存储数据库连接
         Connection connection = null;
 
         try {
             // 获取数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             // 实例化BookTypeDao对象并调用修改方法
             BookTypeDao bookTypeDao = new BookTypeDao();
             int result = bookTypeDao.bookTypeModify(connection, bookType);
@@ -408,7 +408,7 @@ public class Category {
         } finally {
             try {
                 // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
                 // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();

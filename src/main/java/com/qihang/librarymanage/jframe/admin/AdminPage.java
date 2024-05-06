@@ -1,6 +1,6 @@
 package com.qihang.librarymanage.jframe.admin;
 
-import com.qihang.librarymanage.utlis.Theme;
+import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
 import java.awt.*;

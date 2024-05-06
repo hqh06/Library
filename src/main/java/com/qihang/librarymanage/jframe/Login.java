@@ -4,8 +4,8 @@ package com.qihang.librarymanage.jframe;
 import com.qihang.librarymanage.dao.UserDao;
 import com.qihang.librarymanage.jframe.user.UserPage;
 import com.qihang.librarymanage.pojo.User;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
-import com.qihang.librarymanage.utlis.Theme;
+import com.qihang.librarymanage.utils.DatabaseUtils;
+import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,7 +131,7 @@ public class Login extends JFrame {
         user.setRole(roleInfo);
 
         // 创建一个连接对象
-        DatabaseConnect dbConnect = new DatabaseConnect();
+        DatabaseUtils dbConnect = new DatabaseUtils();
         Connection connection = null;
         try {
             // 获取一个数据库连接

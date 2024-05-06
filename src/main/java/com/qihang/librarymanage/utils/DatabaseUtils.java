@@ -1,10 +1,10 @@
-package com.qihang.librarymanage.utlis;
+package com.qihang.librarymanage.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseConnect {
+public class DatabaseUtils {
     public Connection getConnection() throws Exception{
         // 注册数据库驱动
         Class.forName("com.mysql.cj.jdbc.Driver");

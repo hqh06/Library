@@ -4,8 +4,8 @@ import com.qihang.librarymanage.dao.BorrowDetailDao;
 import com.qihang.librarymanage.pojo.Book;
 import com.qihang.librarymanage.pojo.BorrowDetail;
 import com.qihang.librarymanage.pojo.User;
-import com.qihang.librarymanage.utlis.DatabaseConnect;
-import com.qihang.librarymanage.utlis.Theme;
+import com.qihang.librarymanage.utils.DatabaseUtils;
+import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -234,7 +234,7 @@ public class MyInfoPage extends JFrame {
 
         // 设置行数为0每次查询前清空表上一次的数据
         defaultTableModel.setRowCount(0);
-        DatabaseConnect connect = new DatabaseConnect();
+        DatabaseUtils connect = new DatabaseUtils();
         Connection connection = null;
         try {
             // 获取数据连接
@@ -285,7 +285,7 @@ public class MyInfoPage extends JFrame {
             JOptionPane.showMessageDialog(null, "当前书籍已还");
             return;
         }
-        DatabaseConnect databaseConnect = new DatabaseConnect();
+        DatabaseUtils databaseUtils = new DatabaseUtils();
         Connection connection =null;
         // 获取当前时间
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
@@ -296,7 +296,7 @@ public class MyInfoPage extends JFrame {
         borrowDetail.setReturnTime(String.valueOf(timestamp)); // 设置归还时间
         try {
             // 数据库连接
-            connection = databaseConnect.getConnection();
+            connection = databaseUtils.getConnection();
             BorrowDetailDao borrowDetailDao = new BorrowDetailDao();
             int result = borrowDetailDao.updateDetail(connection, borrowDetail);
             if (result==0){
@@ -311,7 +311,7 @@ public class MyInfoPage extends JFrame {
             e.printStackTrace();
         }finally {
             try {
-                databaseConnect.closeConnection(connection);
+                databaseUtils.closeConnection(connection);
             }catch (SQLException e){
                 e.printStackTrace();
             }
