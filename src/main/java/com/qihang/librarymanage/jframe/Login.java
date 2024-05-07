@@ -139,7 +139,7 @@ public class Login extends JFrame {
             connection = dbConnect.getConnection();
             // 查询用户
             UserDao userDao = new UserDao();
-            ArrayList<User> users = userDao.queryUser(connection, user);
+            ArrayList<User> users = userDao.loginUser(connection, user);
 
             for (User userTemp : users) {
                 // 如果对象中的值为null则在数据库中未查到该用户

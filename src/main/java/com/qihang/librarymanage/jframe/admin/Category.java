@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -165,7 +164,7 @@ public class Category {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 实例化图书类型对象并设置对象属性
-                com.qihang.librarymanage.pojo.BookType bookType = new com.qihang.librarymanage.pojo.BookType();
+                BookType bookType = new BookType();
                 bookType.setTypeName(bookTypeNameJTextField.getText().trim());
                 bookType.setTypeRemark(bookTypeDescribeJTextArea.getText().trim());
                 addBookType(bookType);
@@ -280,7 +279,7 @@ public class Category {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 实例化图书类型对象并设置对象属性
-                com.qihang.librarymanage.pojo.BookType bookType = new com.qihang.librarymanage.pojo.BookType();
+                BookType bookType = new BookType();
                 bookType.setId(Integer.valueOf(bookTypeIDJTextField.getText().trim()));
                 bookType.setTypeName(booKTypeNameJTextField.getText().trim());
                 bookType.setTypeRemark(bookTypeRemarkJTextArea.getText().trim());
@@ -333,7 +332,7 @@ public class Category {
      *
      * @param bookType 图书类型对象
      */
-    public void addBookType(com.qihang.librarymanage.pojo.BookType bookType) {
+    public void addBookType(BookType bookType) {
 
         // 去除前后空格为空
         if (bookType.getTypeName().isEmpty() || bookType.getTypeRemark().isEmpty()) {
@@ -376,7 +375,7 @@ public class Category {
      *
      * @param bookType 图书类型对象
      */
-    public void modifyBookType(com.qihang.librarymanage.pojo.BookType bookType) {
+    public void modifyBookType(BookType bookType) {
         // 检查 booKTypeName, 和 bookTypeRemark 文本框是否为空
         if (bookType.getTypeName().isEmpty() || bookType.getTypeRemark().isEmpty()) {
             JOptionPane.showMessageDialog(null, "请输入相关信息");
