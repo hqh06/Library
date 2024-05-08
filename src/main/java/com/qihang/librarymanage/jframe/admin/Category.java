@@ -26,9 +26,9 @@ public class Category {
     }
 
     /**
-     * 初始化查询图书页面
+     * 这个方法用于创建一个查询图书类别的界面。
      *
-     * @return 表对象
+     * @return 返回创建的表格对象
      */
     public JTable query() {
         // 创建一个面板
@@ -107,9 +107,8 @@ public class Category {
     }
 
     /**
-     * 初始化添加图书类型页面
+     * 这个方法用于创建一个图书类别添加的界面。
      */
-
     public void add() {
         JLabel title = new JLabel("类别添加");
         title.setFont(new Font("微软雅黑", Font.PLAIN, 30));
@@ -190,7 +189,7 @@ public class Category {
 
 
     /**
-     * 初始化修改图书类型页面
+     * 这个方法用于创建一个图书类别更新的界面。
      */
     public void modify() {
         JLabel title = new JLabel("类别更新");
@@ -291,9 +290,9 @@ public class Category {
     }
 
     /**
-     * 将数据库中查询的数据添加到查询图书页面
+     * 这个方法用于在数据库中查询图书类别，并将查询结果显示在表格中。
      *
-     * @param bookType 图书类型对象
+     * @param bookType 包含要查询的图书类别信息的图书类别对象
      */
     public void queryBookType(BookType bookType) {
 
@@ -304,14 +303,21 @@ public class Category {
         DatabaseUtils databaseUtils = new DatabaseUtils();
         Connection connection = null;
         try {
+            // 通过databaseUtils获取数据库连接
             connection = databaseUtils.getConnection();
+
             BookTypeDao bookTypeDao = new BookTypeDao();
-            ArrayList<BookType> bookTypes = bookTypeDao.bookTypeQuery(connection, bookType);
+
+            // 使用bookTypeDao的bookTypeQuery方法查询数据库，获取BookType对象的ArrayList
+            ArrayList<BookType> bookTypes = bookTypeDao.queryBookType(connection, bookType);
+
             for (BookType type : bookTypes) {
                 Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(type.getId()));
-                rowData.add(type.getTypeName());
-                rowData.add(type.getTypeRemark());
+                rowData.add(String.valueOf(type.getId())); // 类型的ID
+                rowData.add(type.getTypeName()); // 类型名
+                rowData.add(type.getTypeRemark()); // 类型的备注
+
+                // 将rowData添加到defaultTableModel，这将更新表格模型
                 defaultTableModel.addRow(rowData);
             }
 
@@ -328,9 +334,9 @@ public class Category {
     }
 
     /**
-     * 将新的图书类别添加到数据库
+     * 这个方法用于在数据库中添加一个新的图书类别。
      *
-     * @param bookType 图书类型对象
+     * @param bookType 包含要添加的图书类别信息的图书类别对象
      */
     public void addBookType(BookType bookType) {
 
@@ -347,7 +353,7 @@ public class Category {
 
             // 实例化BookTypeDao对象并调用添加方法
             BookTypeDao bookTypeDao = new BookTypeDao();
-            int result = bookTypeDao.bookTypeAdd(connection, bookType);
+            int result = bookTypeDao.addBookType(connection, bookType);
             if (result == 1) {
                 JOptionPane.showMessageDialog(null, "添加成功");
                 // 重新刷新表格
@@ -371,9 +377,9 @@ public class Category {
     }
 
     /**
-     * 将文本框中的内容根据图书类型ID在数据库进行修改对应的值
+     * 这个方法用于在数据库中修改图书类别的信息
      *
-     * @param bookType 图书类型对象
+     * @param bookType 包含要修改的图书类别信息的图书类别对象
      */
     public void modifyBookType(BookType bookType) {
         // 检查 booKTypeName, 和 bookTypeRemark 文本框是否为空
@@ -393,7 +399,7 @@ public class Category {
             connection = databaseUtils.getConnection();
             // 实例化BookTypeDao对象并调用修改方法
             BookTypeDao bookTypeDao = new BookTypeDao();
-            int result = bookTypeDao.bookTypeModify(connection, bookType);
+            int result = bookTypeDao.modifyBookType(connection, bookType);
             if (result == 1) {
                 JOptionPane.showMessageDialog(null, "修改成功");
                 // 修改成功后重新加载表

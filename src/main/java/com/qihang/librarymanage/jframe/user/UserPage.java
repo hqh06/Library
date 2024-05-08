@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -239,7 +238,7 @@ public class UserPage extends JFrame {
             BookDao bookDao = new BookDao();
             BookTypeDao bookTypeDao = new BookTypeDao();
             ArrayList<Book> books = bookDao.queryBook(connection, book);
-            ArrayList<BookType> bookTypes = bookTypeDao.bookTypeQuery(connection, new BookType());// 传一个空对象查询所有
+            ArrayList<BookType> bookTypes = bookTypeDao.queryBookType(connection, new BookType());// 传一个空对象查询所有
             // 将数据库中查询到的表数据加载到表格中
             for (Book bookTemp : books) {
                 Vector<String> rowData = new Vector<>();
@@ -294,7 +293,7 @@ public class UserPage extends JFrame {
             // 获取数据连接
             connection = databaseUtils.getConnection();
             BorrowDetailDao borrowDetailDao = new BorrowDetailDao();
-            int result = borrowDetailDao.insertDetail(connection, borrowDetail);
+            int result = borrowDetailDao.addDetail(connection, borrowDetail);
             if (result == 0) {
                 JOptionPane.showMessageDialog(null, "该书已借");
             } else if (result == 1) {

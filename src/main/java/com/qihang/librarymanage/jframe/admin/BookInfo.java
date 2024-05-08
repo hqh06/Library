@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,9 +30,9 @@ public class BookInfo {
     }
 
     /**
-     * 初始化查询图书页面
+     * 这个方法用于创建一个表格，用于查询和显示图书信息。
      *
-     * @return 表对象
+     * @return 返回创建的表格对象
      */
     public JTable query() {
         // 创建一个面板
@@ -113,7 +112,7 @@ public class BookInfo {
     }
 
     /**
-     * 初始化添加图书页面
+     * 这个方法用于创建一个图书添加的界面。
      */
     public void add() {
         JLabel title = new JLabel("图书添加");
@@ -278,7 +277,7 @@ public class BookInfo {
     }
 
     /**
-     * 初始化更新图书页面
+     * 这个方法用于创建一个图书更新的界面。
      */
     public void modify() {
         JLabel title = new JLabel("图书更新");
@@ -487,9 +486,9 @@ public class BookInfo {
     }
 
     /**
-     * 在图书添加页面中
-     * 通过数据库中获取的数据
-     * 构造图书类型下拉框
+     * 这个方法用于从数据库中获取所有的图书类型。
+     *
+     * @return 返回一个包含所有图书类型的 ArrayList
      */
     public ArrayList<BookType> showBookType() {
         // 创建一个DatabaseConnect 对象
@@ -504,7 +503,7 @@ public class BookInfo {
             // 获取数据库连接
             connection = databaseUtils.getConnection();
             BookTypeDao bookTypeDao = new BookTypeDao();
-            bookTypes = bookTypeDao.bookTypeQuery(connection, new BookType());// 传入一个空BookType获取全部图书类型
+            bookTypes = bookTypeDao.queryBookType(connection, new BookType());// 传入一个空BookType获取全部图书类型
 
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
@@ -522,9 +521,9 @@ public class BookInfo {
     }
 
     /**
-     * 连接数据库并查询图书
+     * 这个方法用于在数据库中查询图书，并将查询结果显示在表格中。
      *
-     * @param book 图书对象
+     * @param book 包含要查询的图书信息的图书对象
      */
     public void queryBook(Book book) {
         // 设置行数为0每次查询前清空表上一次的数据
@@ -541,30 +540,36 @@ public class BookInfo {
             connection = databaseUtils.getConnection();
             // 实例化BookDao对象并调用图书查询方法
             BookDao bookDao = new BookDao();
+            // 查询所有的图书
             ArrayList<Book> books = bookDao.queryBook(connection, book);
-
-            // 查询所有的图书类型
+            // 创建一个BookType对象的ArrayList，通过调用showBookType()方法获取数据
             ArrayList<BookType> bookTypes = showBookType();
-            for (Book bookTemp : books) {
-                Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(bookTemp.getId()));
-                rowData.add(bookTemp.getBookName());
-                rowData.add(bookTemp.getAuthor());
-                rowData.add(bookTemp.getPublish());
 
+            // 遍历books列表中的每一本书
+            for (Book bookTemp : books) {
+                // 创建一个新的Vector来存储每本书的数据
+                Vector<String> rowData = new Vector<>();
+
+                // 添加书的各种属性到rowData
+                rowData.add(String.valueOf(bookTemp.getId())); // 书的ID
+                rowData.add(bookTemp.getBookName()); // 书名
+                rowData.add(bookTemp.getAuthor()); // 作者
+                rowData.add(bookTemp.getPublish()); // 出版社
+
+                // 遍历bookTypes列表，找到与当前书匹配的类型
                 for (BookType bookType : bookTypes) {
+                    // 如果书的类型ID与当前遍历的类型ID匹配，添加类型名到rowData
                     if (Objects.equals(bookTemp.getTypeId(), bookType.getId())) {
-                        rowData.add(bookType.getTypeName());
+                        rowData.add(bookType.getTypeName()); // 类型名
                     }
                 }
-                rowData.add(String.valueOf(bookTemp.getNumber()));
-                rowData.add(bookTemp.getBookRemark());
+                // 继续添加书的其他属性到rowData
+                rowData.add(String.valueOf(bookTemp.getNumber())); // 书的数量
+                rowData.add(bookTemp.getBookRemark()); // 书的备注
 
-
+                // 将rowData添加到defaultTableModel，这将更新表格模型
                 defaultTableModel.addRow(rowData);
             }
-
-
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
             e.printStackTrace();
@@ -581,9 +586,9 @@ public class BookInfo {
     }
 
     /**
-     * 连接数据库并添加图书
+     * 这个方法用于在数据库中添加一本新的图书。
      *
-     * @param book 图书对象
+     * @param book 包含要添加的图书信息的图书对象
      */
     public void addBook(Book book) {
         // 创建一个DatabaseConnect 对象
@@ -622,9 +627,9 @@ public class BookInfo {
     }
 
     /**
-     * 连接数据库并修改图书
+     * 这个方法用于在数据库中修改图书的信息。
      *
-     * @param book 图书对象
+     * @param book 包含要修改的图书信息的图书对象
      */
     public void modifyBook(Book book) {
         // 创建一个DatabaseConnect 对象
@@ -660,9 +665,9 @@ public class BookInfo {
     }
 
     /**
-     * 连接数据库并删除图书
+     * 这个方法用于在数据库中删除指定的图书。
      *
-     * @param book 图书对象
+     * @param book 包含要删除的图书信息的图书对象
      */
     public void deleteBook(Book book) {
         // 创建一个DatabaseConnect 对象

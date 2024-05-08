@@ -125,7 +125,7 @@ public class AdminPage extends JFrame {
             }
         });
 
-        new UserInfo(getContentPane()).add(); //测试
+        new Category(getContentPane()).add();
 
         setVisible(true);
     }

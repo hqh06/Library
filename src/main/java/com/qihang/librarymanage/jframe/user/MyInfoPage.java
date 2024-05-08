@@ -17,7 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -295,7 +294,7 @@ public class MyInfoPage extends JFrame {
             // 数据库连接
             connection = databaseUtils.getConnection();
             BorrowDetailDao borrowDetailDao = new BorrowDetailDao();
-            int result = borrowDetailDao.updateDetail(connection, borrowDetail);
+            int result = borrowDetailDao.modifyDetail(connection, borrowDetail);
             if (result==0){
                 JOptionPane.showMessageDialog(null, "还书失败");
             }else {

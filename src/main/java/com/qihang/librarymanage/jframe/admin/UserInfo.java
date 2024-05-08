@@ -27,11 +27,10 @@ public class UserInfo {
     }
 
     /**
-     * 初始化查询用户页面
+     * 查询用户信息并返回一个JTable对象.
      *
-     * @return 表对象
+     * @return JTable对象，包含查询到的用户信息.
      */
-
     public JTable query() {
         // 创建一个面板
         JPanel userInfoJPanel = new JPanel();
@@ -109,9 +108,8 @@ public class UserInfo {
     }
 
     /**
-     * 初始化添加用户页面
+     * 这个方法用于添加用户信息到面板中。
      */
-
     public void add() {
         JLabel title = new JLabel("用户添加");
         title.setFont(new Font("微软雅黑", Font.PLAIN, 30));
@@ -269,7 +267,7 @@ public class UserInfo {
     }
 
     /**
-     * 初始化修改用户页面
+     * 这个方法用于修改和删除用户信息。
      */
     public void modify() {
         JLabel title = new JLabel("用户更新");
@@ -455,7 +453,7 @@ public class UserInfo {
     /**
      * 连接数据库查询用户信息
      *
-     * @param user 用户对象
+     * @param user User对象，包含了要查询的用户信息。
      */
     public void queryUser(User user) {
         // 设置行数为0每次查询前清空表上一次的数据
@@ -507,9 +505,9 @@ public class UserInfo {
     }
 
     /**
-     * 连接数据库添加用户信息
+     * 这个方法用于将新用户的信息添加到数据库中。
      *
-     * @param user 用户对象
+     * @param user User对象，包含了要添加的用户信息。
      */
     public void addUser(User user) {
 
@@ -570,27 +568,26 @@ public class UserInfo {
     }
 
     /**
-     * 连接数据库修改用户信息
+     * 这个方法用于修改数据库中的用户信息。
      *
-     * @param user 用户对象
+     * @param user User对象，包含了要更新的用户信息。
      */
     public void modifyUser(User user) {
-        // 不允许包含空格的正则
+        // 使用正则表达式检查用户名是否包含空格
         boolean userRex = Pattern.matches("^(?!.*\\s).+$", user.getUserName());
         if (!userRex) {
             JOptionPane.showMessageDialog(null, "用户名不能有空格");
             return;
         }
+
+        // 使用正则表达式检查用户账户是否只包含字母、数字和下划线
         boolean accountRex = Pattern.matches("^[a-zA-Z0-9_]+$", user.getUserAccount());
         if (!accountRex) {
             JOptionPane.showMessageDialog(null, "账户只能使用字母、数字、下划线");
             return;
         }
-//        boolean pwdRex = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?!.*\\s).{8,16}$", user.getPassword());
-//        if (!pwdRex) {
-//            JOptionPane.showMessageDialog(null, "密码8-16个字符需包含大、小写字母和数字且不包含空格");
-//            return;
-//        }
+
+        // 使用正则表达式检查手机号码格式是否正确
         boolean phoneNumberRex = Pattern.matches("^1[34578]\\d{9}$", user.getPhone());
         if (!phoneNumberRex) {
             JOptionPane.showMessageDialog(null, "请输入正确的手机号码");
@@ -605,19 +602,27 @@ public class UserInfo {
 
         try {
             // 获取数据库连接
+            // 通过databaseUtils获取数据库连接
             connection = databaseUtils.getConnection();
-            UserDao userDao = new UserDao();
-            int result = userDao.modifyUser(connection, user);
-            if (result == 2) {
-                JOptionPane.showMessageDialog(null, "账户已存在");
 
+            UserDao userDao = new UserDao();
+
+            int result = userDao.modifyUser(connection, user);
+
+            // 根据modifyUser方法的返回结果进行不同的操作
+            if (result == 2) {
+                // 如果返回结果为2，表示账户已存在，显示错误消息
+                JOptionPane.showMessageDialog(null, "账户已存在");
             } else if (result > 0) {
+                // 如果返回结果大于0，表示修改成功，显示成功消息
                 JOptionPane.showMessageDialog(null, "修改成功");
-                // 刷新表格
+                // 刷新表格，显示最新的用户信息
                 queryUser(new User());
             } else {
+                // 表示修改失败，显示失败消息
                 JOptionPane.showMessageDialog(null, "修改失败");
             }
+
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
             e.printStackTrace();
@@ -633,9 +638,9 @@ public class UserInfo {
     }
 
     /**
-     * 连接数据库删除用户信息
+     * 这个方法用于从数据库中删除用户信息。
      *
-     * @param user 用户对象
+     * @param user User对象，包含了要删除的用户信息。
      */
     public void deleteUser(User user) {
         // 创建一个DatabaseConnect 对象
