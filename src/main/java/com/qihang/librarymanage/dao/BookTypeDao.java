@@ -41,6 +41,25 @@ public class BookTypeDao {
     }
 
     /**
+     * 这个方法用于从数据库中删除指定的图书类型。
+     * 最后，执行这个SQL语句，并返回执行结果，即删除的行数。
+     *
+     * @param connection 数据库连接对象
+     * @param bookType   包含了要删除的图书类型信息的对象
+     * @return 返回删除的行数
+     * @throws SQLException 如果在执行SQL语句时出现错误，会抛出SQLException
+     */
+    public int deleteBookType(Connection connection, BookType bookType) throws SQLException {
+        // 创建一个SQL语句，用于删除指定ID的图书类型
+        String sql = "delete from book_type where id=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        // 设置要删除的图书类型的ID
+        stmt.setInt(1, bookType.getId());
+        // 执行SQL语句，并返回删除的行数
+        return stmt.executeUpdate();
+    }
+
+    /**
      * 这个方法用于在数据库中修改图书类型。
      * 它会根据提供的图书类型对象，更新 book_type 表中的相应记录。
      *

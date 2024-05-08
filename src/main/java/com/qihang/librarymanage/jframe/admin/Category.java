@@ -1,6 +1,7 @@
 package com.qihang.librarymanage.jframe.admin;
 
 import com.qihang.librarymanage.dao.BookTypeDao;
+import com.qihang.librarymanage.pojo.Book;
 import com.qihang.librarymanage.pojo.BookType;
 import com.qihang.librarymanage.utils.DatabaseUtils;
 
@@ -23,87 +24,6 @@ public class Category {
 
     public Category(Container getContentPane) {
         this.CONTENTPANE = getContentPane;
-    }
-
-    /**
-     * 这个方法用于创建一个查询图书类别的界面。
-     *
-     * @return 返回创建的表格对象
-     */
-    public JTable query() {
-        // 创建一个面板
-        JPanel bookTypeInfoJPanel = new JPanel();
-        bookTypeInfoJPanel.setBounds(40, 100, 700, 500);
-        // 设置面板的边框
-        bookTypeInfoJPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK, 3.0f, 3.0f));
-        bookTypeInfoJPanel.setLayout(null);
-        CONTENTPANE.add(bookTypeInfoJPanel);
-
-        // 类别名
-        JLabel bookTypeName = new JLabel("类别名:");
-        bookTypeName.setBounds(150, 50, 100, 40);
-        bookTypeName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        bookTypeInfoJPanel.add(bookTypeName);
-
-        // 创建一个搜索框
-        JTextField searchJTextField = new JTextField();
-        searchJTextField.setBounds(230, 50, 200, 40);
-        searchJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        bookTypeInfoJPanel.add(searchJTextField);
-
-        // 创建一个搜索按钮
-        JButton searchJButton = new JButton("搜索");
-        searchJButton.setBounds(450, 50, 80, 40);
-        searchJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        bookTypeInfoJPanel.add(searchJButton);
-        searchJButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 实例化BookType对象并添加值
-                BookType bookType = new BookType();
-                bookType.setTypeName(searchJTextField.getText().trim());
-                queryBookType(bookType);
-            }
-        });
-
-        // 创建一个滚动面板
-        JScrollPane bookInfoJScrollPane = new JScrollPane();
-        bookInfoJScrollPane.setBounds(25, 120, 650, 330);
-        bookTypeInfoJPanel.add(bookInfoJScrollPane); // 将滚动面板添加到JPanel面板中
-
-
-        // 创建一个表
-        JTable bookTypeInfoTable = new JTable() {
-            // 重写isCellEditable方法让表格不能修改只能选中
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        // 做一个表头栏数据
-        String[] tableTitle = {"编号", "类别名称", "类别描述"};
-        String[][] date = {}; // 具体的各栏行记录 先用空的二位数组占位
-        defaultTableModel = new DefaultTableModel(date, tableTitle);
-        bookTypeInfoTable.setModel(defaultTableModel);
-
-        bookTypeInfoTable.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20)); // 设置表头字体
-        bookTypeInfoTable.getTableHeader().setReorderingAllowed(false); // 禁止拖动表的列
-        bookTypeInfoTable.setFont(new Font("微软雅黑", Font.PLAIN, 17));
-        bookTypeInfoTable.setRowHeight(40); // 设置行高
-        bookTypeInfoTable.getColumnModel().getColumn(0).setMaxWidth(100);
-
-        bookTypeInfoTable.setShowHorizontalLines(true); // 设置水平网格线 第三方主题默认没有
-        bookTypeInfoTable.setIntercellSpacing(new Dimension(0, 0)); // 移除单元格间隙
-
-        // 设置表中文字居中
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setHorizontalAlignment(JLabel.CENTER);
-        bookTypeInfoTable.setDefaultRenderer(Object.class, renderer);
-        // 将表添加到滚动面板中
-        bookInfoJScrollPane.setViewportView(bookTypeInfoTable);
-        queryBookType(new BookType()); // 初始化表
-
-        return bookTypeInfoTable;
     }
 
     /**
@@ -186,7 +106,6 @@ public class Category {
         });
 
     }
-
 
     /**
      * 这个方法用于创建一个图书类别更新的界面。
@@ -272,7 +191,7 @@ public class Category {
 
         JButton modifyJButton = new JButton("修改");
         modifyJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        modifyJButton.setBounds(110, 330, 300, 40);
+        modifyJButton.setBounds(110, 330, 140, 40);
         bookTypeInfoJPanel.add(modifyJButton);
         modifyJButton.addActionListener(new ActionListener() {
             @Override
@@ -286,52 +205,104 @@ public class Category {
             }
         });
 
+        JButton deleteJButton = new JButton("删除");
+        deleteJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        deleteJButton.setBounds(270, 330, 140, 40);
+        bookTypeInfoJPanel.add(deleteJButton);
+        deleteJButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BookType bookType = new BookType();
+                bookType.setId(Integer.valueOf(bookTypeIDJTextField.getText().trim()));
+                deleteBookType(bookType);
+            }
+        });
+
 
     }
 
     /**
-     * 这个方法用于在数据库中查询图书类别，并将查询结果显示在表格中。
+     * 这个方法用于创建一个查询图书类别的界面。
      *
-     * @param bookType 包含要查询的图书类别信息的图书类别对象
+     * @return 返回创建的表格对象
      */
-    public void queryBookType(BookType bookType) {
+    public JTable query() {
+        // 创建一个面板
+        JPanel bookTypeInfoJPanel = new JPanel();
+        bookTypeInfoJPanel.setBounds(40, 100, 700, 500);
+        // 设置面板的边框
+        bookTypeInfoJPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK, 3.0f, 3.0f));
+        bookTypeInfoJPanel.setLayout(null);
+        CONTENTPANE.add(bookTypeInfoJPanel);
 
-        // 设置行数为0每次查询前清空表上一次的数据
-        defaultTableModel.setRowCount(0);
+        // 类别名
+        JLabel bookTypeName = new JLabel("类别名:");
+        bookTypeName.setBounds(150, 50, 100, 40);
+        bookTypeName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        bookTypeInfoJPanel.add(bookTypeName);
 
-        // 先查询所有的类别信息添加到表格中
-        DatabaseUtils databaseUtils = new DatabaseUtils();
-        Connection connection = null;
-        try {
-            // 通过databaseUtils获取数据库连接
-            connection = databaseUtils.getConnection();
+        // 创建一个搜索框
+        JTextField searchJTextField = new JTextField();
+        searchJTextField.setBounds(230, 50, 200, 40);
+        searchJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        bookTypeInfoJPanel.add(searchJTextField);
 
-            BookTypeDao bookTypeDao = new BookTypeDao();
-
-            // 使用bookTypeDao的bookTypeQuery方法查询数据库，获取BookType对象的ArrayList
-            ArrayList<BookType> bookTypes = bookTypeDao.queryBookType(connection, bookType);
-
-            for (BookType type : bookTypes) {
-                Vector<String> rowData = new Vector<>();
-                rowData.add(String.valueOf(type.getId())); // 类型的ID
-                rowData.add(type.getTypeName()); // 类型名
-                rowData.add(type.getTypeRemark()); // 类型的备注
-
-                // 将rowData添加到defaultTableModel，这将更新表格模型
-                defaultTableModel.addRow(rowData);
+        // 创建一个搜索按钮
+        JButton searchJButton = new JButton("搜索");
+        searchJButton.setBounds(450, 50, 80, 40);
+        searchJButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        bookTypeInfoJPanel.add(searchJButton);
+        searchJButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 实例化BookType对象并添加值
+                BookType bookType = new BookType();
+                bookType.setTypeName(searchJTextField.getText().trim());
+                queryBookType(bookType);
             }
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 关闭连接
-                databaseUtils.closeConnection(connection);
-            } catch (Exception e) {
-                e.printStackTrace();
+        // 创建一个滚动面板
+        JScrollPane bookInfoJScrollPane = new JScrollPane();
+        bookInfoJScrollPane.setBounds(25, 120, 650, 330);
+        bookTypeInfoJPanel.add(bookInfoJScrollPane); // 将滚动面板添加到JPanel面板中
+
+
+        // 创建一个表
+        JTable bookTypeInfoTable = new JTable() {
+            // 重写isCellEditable方法让表格不能修改只能选中
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
-        }
+        };
+        // 做一个表头栏数据
+        String[] tableTitle = {"编号", "类别名称", "类别描述"};
+        String[][] date = {}; // 具体的各栏行记录 先用空的二位数组占位
+        defaultTableModel = new DefaultTableModel(date, tableTitle);
+        bookTypeInfoTable.setModel(defaultTableModel);
+
+        bookTypeInfoTable.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20)); // 设置表头字体
+        bookTypeInfoTable.getTableHeader().setReorderingAllowed(false); // 禁止拖动表的列
+        bookTypeInfoTable.setFont(new Font("微软雅黑", Font.PLAIN, 17));
+        bookTypeInfoTable.setRowHeight(40); // 设置行高
+        bookTypeInfoTable.getColumnModel().getColumn(0).setMaxWidth(100);
+
+        bookTypeInfoTable.setShowHorizontalLines(true); // 设置水平网格线 第三方主题默认没有
+        bookTypeInfoTable.setIntercellSpacing(new Dimension(0, 0)); // 移除单元格间隙
+
+        // 设置表中文字居中
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        bookTypeInfoTable.setDefaultRenderer(Object.class, renderer);
+        // 将表添加到滚动面板中
+        bookInfoJScrollPane.setViewportView(bookTypeInfoTable);
+        queryBookType(new BookType()); // 初始化表
+
+        return bookTypeInfoTable;
     }
+
+
 
     /**
      * 这个方法用于在数据库中添加一个新的图书类别。
@@ -371,6 +342,40 @@ public class Category {
             try {
                 databaseUtils.closeConnection(connection);
             } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteBookType(BookType bookType){
+        // 创建一个DatabaseConnect 对象
+        DatabaseUtils databaseUtils = new DatabaseUtils();
+
+        // 初始化一个 Connection 对象，用于存储数据库连接
+        Connection connection = null;
+
+        try {
+            // 获取数据库连接
+            connection = databaseUtils.getConnection();
+            BookTypeDao bookTypeDao = new BookTypeDao();
+            int result = bookTypeDao.deleteBookType(connection, bookType);
+            if (result>0){
+                JOptionPane.showMessageDialog(null, "删除成功");
+                // 刷新表格
+                queryBookType(new BookType());
+            }else {
+                JOptionPane.showMessageDialog(null, "删除失败");
+            }
+
+        } catch (Exception e) {
+            // 如果获取数据库连接时出现异常，打印异常堆栈信息
+            e.printStackTrace();
+        } finally {
+            try {
+                // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
+                databaseUtils.closeConnection(connection);
+            } catch (SQLException e) {
+                // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
                 e.printStackTrace();
             }
         }
@@ -421,5 +426,49 @@ public class Category {
             }
         }
 
+    }
+
+    /**
+     * 这个方法用于在数据库中查询图书类别，并将查询结果显示在表格中。
+     *
+     * @param bookType 包含要查询的图书类别信息的图书类别对象
+     */
+    public void queryBookType(BookType bookType) {
+
+        // 设置行数为0每次查询前清空表上一次的数据
+        defaultTableModel.setRowCount(0);
+
+        // 先查询所有的类别信息添加到表格中
+        DatabaseUtils databaseUtils = new DatabaseUtils();
+        Connection connection = null;
+        try {
+            // 通过databaseUtils获取数据库连接
+            connection = databaseUtils.getConnection();
+
+            BookTypeDao bookTypeDao = new BookTypeDao();
+
+            // 使用bookTypeDao的bookTypeQuery方法查询数据库，获取BookType对象的ArrayList
+            ArrayList<BookType> bookTypes = bookTypeDao.queryBookType(connection, bookType);
+
+            for (BookType type : bookTypes) {
+                Vector<String> rowData = new Vector<>();
+                rowData.add(String.valueOf(type.getId())); // 类型的ID
+                rowData.add(type.getTypeName()); // 类型名
+                rowData.add(type.getTypeRemark()); // 类型的备注
+
+                // 将rowData添加到defaultTableModel，这将更新表格模型
+                defaultTableModel.addRow(rowData);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // 关闭连接
+                databaseUtils.closeConnection(connection);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
