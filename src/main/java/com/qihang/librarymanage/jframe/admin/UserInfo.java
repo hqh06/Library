@@ -1,7 +1,6 @@
 package com.qihang.librarymanage.jframe.admin;
 
 import com.qihang.librarymanage.dao.UserDao;
-import com.qihang.librarymanage.pojo.Book;
 import com.qihang.librarymanage.pojo.User;
 import com.qihang.librarymanage.utils.DatabaseUtils;
 
@@ -17,6 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 public class UserInfo {
     private final Container CONTENTPANE;
@@ -127,40 +127,53 @@ public class UserInfo {
         userInfoJPanel.setLayout(null);
         CONTENTPANE.add(userInfoJPanel);
 
+
         // 用户名
         JLabel userName = new JLabel("昵称:");
         userName.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        userName.setBounds(50, 50, 100, 40);
+        userName.setBounds(50, 30, 100, 40);
         userInfoJPanel.add(userName);
         // 用户名单行文本框
         JTextField userNameJTextField = new JTextField();
         userNameJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        userNameJTextField.setBounds(130, 50, 300, 40);
+        userNameJTextField.setBounds(130, 30, 300, 40);
         userInfoJPanel.add(userNameJTextField);
         // 用户账户
         JLabel userAccount = new JLabel("账户:");
         userAccount.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        userAccount.setBounds(50, 120, 100, 40);
+        userAccount.setBounds(50, 100, 100, 40);
         userInfoJPanel.add(userAccount);
         // 用户账户单行文本框
         JTextField userAccountJTextField = new JTextField();
         userAccountJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        userAccountJTextField.setBounds(130, 120, 300, 40);
+        userAccountJTextField.setBounds(130, 100, 300, 40);
         userInfoJPanel.add(userAccountJTextField);
+
+        // 密码
+        JLabel userPwd = new JLabel("密码:");
+        userPwd.setFont(new Font("微软雅黑", Font.PLAIN, 21));
+        userPwd.setBounds(50, 170, 80, 40);
+        userInfoJPanel.add(userPwd);
+
+        // 密码文本框
+        JTextField userPwdJTextField = new JTextField();
+        userPwdJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+        userPwdJTextField.setBounds(130, 170, 300, 40);
+        userInfoJPanel.add(userPwdJTextField);
 
         // 性别
         JLabel userGender = new JLabel("性别:");
-        userGender.setBounds(50, 200, 80, 30);
+        userGender.setBounds(50, 230, 80, 30);
         userGender.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         userInfoJPanel.add(userGender);
 
         JRadioButton selectMan = new JRadioButton("男");
         selectMan.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        selectMan.setBounds(180, 200, 60, 30);
+        selectMan.setBounds(180, 230, 60, 30);
         selectMan.setSelected(true); // 默认用户为第一选项
         JRadioButton selectWoman = new JRadioButton("女");
         selectWoman.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        selectWoman.setBounds(300, 200, 60, 30);
+        selectWoman.setBounds(300, 230, 60, 30);
         // 把selectMan和selectWoman加入同一个组实现单选
         ButtonGroup genderButtonGroup = new ButtonGroup();
         genderButtonGroup.add(selectMan);
@@ -171,18 +184,18 @@ public class UserInfo {
 
         // 角色
         JLabel role = new JLabel("角色:");
-        role.setBounds(50, 260, 80, 30);
+        role.setBounds(50, 290, 80, 30);
         role.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         userInfoJPanel.add(role);
 
         // 角色选择
         JRadioButton selectUser = new JRadioButton("用户");
         selectUser.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        selectUser.setBounds(180, 260, 100, 30);
+        selectUser.setBounds(180, 290, 100, 30);
         selectUser.setSelected(true); // 默认用户为第一选项
         JRadioButton selectAdmin = new JRadioButton("管理员");
         selectAdmin.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        selectAdmin.setBounds(300, 260, 100, 30);
+        selectAdmin.setBounds(300, 290, 100, 30);
         // 把admin和user加入同一个组实现单选
         ButtonGroup roleButtonGroup = new ButtonGroup();
         roleButtonGroup.add(selectAdmin);
@@ -194,12 +207,12 @@ public class UserInfo {
         // 用户电话
         JLabel userPhone = new JLabel("电话:");
         userPhone.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-        userPhone.setBounds(50, 330, 100, 40);
+        userPhone.setBounds(50, 350, 100, 40);
         userInfoJPanel.add(userPhone);
         // 用户电话单行文本框
         JTextField userPhoneJTextField = new JTextField();
         userPhoneJTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        userPhoneJTextField.setBounds(130, 330, 300, 40);
+        userPhoneJTextField.setBounds(130, 350, 300, 40);
         userInfoJPanel.add(userPhoneJTextField);
 
 
@@ -212,8 +225,25 @@ public class UserInfo {
         addJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (userNameJTextField.getText().trim().isEmpty() ||
+                        userAccountJTextField.getText().trim().isEmpty() ||
+                        userPwdJTextField.getText().trim().isEmpty() ||
+                        userPhoneJTextField.getText().trim().isEmpty()
+                ) {
+                    JOptionPane.showMessageDialog(null, "请填写相关信息");
+                    return;
+                }
+                int gender = selectMan.isSelected() ? 1 : 0; // 男 1 女 0
+                int role = selectUser.isSelected() ? 1 : 0; // 用户 1 管理员 0
                 // 实例化User对象并设置对象属性
-
+                User user = new User();
+                user.setUserName(userNameJTextField.getText().trim());
+                user.setUserAccount(userAccountJTextField.getText().trim());
+                user.setPassword(userPwdJTextField.getText().trim());
+                user.setSex(gender);
+                user.setRole(role);
+                user.setPhone(userPhoneJTextField.getText().trim());
+                addUser(user);
             }
         });
 
@@ -226,8 +256,13 @@ public class UserInfo {
         resetJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 清空类别名称和类别描述
-
+                // 清空输入框中的内容
+                userNameJTextField.setText("");
+                userAccountJTextField.setText("");
+                userPwdJTextField.setText("");
+                selectMan.setSelected(true);
+                selectUser.setSelected(true);
+                userPhoneJTextField.setText("");
             }
         });
 
@@ -352,8 +387,24 @@ public class UserInfo {
                 Object userId = userInfoTable.getValueAt(selectedRow, 0);
                 Object userName = userInfoTable.getValueAt(selectedRow, 1);
                 Object userAccount = userInfoTable.getValueAt(selectedRow, 2);
+                Object sex = userInfoTable.getValueAt(selectedRow, 3);
+                Object role = userInfoTable.getValueAt(selectedRow, 4);
+                Object phone = userInfoTable.getValueAt(selectedRow, 5);
                 // 将获取的值加入文本框
-
+                userIdJTextField.setText(userId.toString());
+                userNameJTextField.setText(userName.toString());
+                userAccountJTextField.setText(userAccount.toString());
+                if (sex == "男") {
+                    selectMan.setSelected(true);
+                } else {
+                    selectWoman.setSelected(true);
+                }
+                if (role == "用户") {
+                    selectUser.setSelected(true);
+                } else {
+                    selectAdmin.setSelected(true);
+                }
+                userPhoneJTextField.setText(phone.toString());
             }
         });
 
@@ -365,7 +416,23 @@ public class UserInfo {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 实例化用户对象并设置对象属性
+                User user = new User();
+                user.setId(Integer.valueOf(userIdJTextField.getText().trim()));
+                user.setUserName(userNameJTextField.getText().trim());
+                user.setUserAccount(userAccountJTextField.getText().trim());
+                if (selectMan.isSelected()) {
+                    user.setSex(1); // 男
+                } else {
+                    user.setSex(0); // 女
+                }
+                if (selectUser.isSelected()) {
+                    user.setRole(1); // 用户
+                } else {
+                    user.setRole(0); // 管理员
+                }
+                user.setPhone(userPhoneJTextField.getText().trim());
 
+                modifyUser(user);
             }
         });
         // 删除按钮
@@ -377,13 +444,23 @@ public class UserInfo {
         deleteJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                User user = new User();
+                user.setId(Integer.valueOf(userIdJTextField.getText().trim()));
+                deleteUser(user);
             }
         });
 
     }
 
-    public void queryUser(User user){
+    /**
+     * 连接数据库查询用户信息
+     *
+     * @param user 用户对象
+     */
+    public void queryUser(User user) {
+        // 设置行数为0每次查询前清空表上一次的数据
+        defaultTableModel.setRowCount(0);
+
         // 创建一个DatabaseConnect 对象
         DatabaseUtils databaseUtils = new DatabaseUtils();
 
@@ -401,12 +478,184 @@ public class UserInfo {
                 rowData.add(String.valueOf(userTemp.getId()));
                 rowData.add(userTemp.getUserName());
                 rowData.add(userTemp.getUserAccount());
-                rowData.add(userTemp.getSex().toString());
-                rowData.add(userTemp.getRole().toString());
+                if (userTemp.getSex() == 1) {
+                    rowData.add("男");
+                } else {
+                    rowData.add("女");
+                }
+                if (userTemp.getRole() == 1) {
+                    rowData.add("用户");
+                } else {
+                    rowData.add("管理员");
+                }
                 rowData.add(userTemp.getPhone());
                 defaultTableModel.addRow(rowData);
             }
 
+        } catch (Exception e) {
+            // 如果获取数据库连接时出现异常，打印异常堆栈信息
+            e.printStackTrace();
+        } finally {
+            try {
+                // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
+                databaseUtils.closeConnection(connection);
+            } catch (SQLException e) {
+                // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 连接数据库添加用户信息
+     *
+     * @param user 用户对象
+     */
+    public void addUser(User user) {
+
+        // 不允许包含空格的正则
+        boolean userRex = Pattern.matches("^(?!.*\\s).+$", user.getUserName());
+        if (!userRex) {
+            JOptionPane.showMessageDialog(null, "用户名不能有空格");
+            return;
+        }
+        boolean accountRex = Pattern.matches("^[a-zA-Z0-9_]+$", user.getUserAccount());
+        if (!accountRex) {
+            JOptionPane.showMessageDialog(null, "账户只能使用字母、数字、下划线");
+            return;
+        }
+        boolean pwdRex = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?!.*\\s).{8,16}$", user.getPassword());
+        if (!pwdRex) {
+            JOptionPane.showMessageDialog(null, "密码8-16个字符需包含大、小写字母和数字且不包含空格");
+            return;
+        }
+        boolean phoneNumberRex = Pattern.matches("^1[34578]\\d{9}$", user.getPhone());
+        if (!phoneNumberRex) {
+            JOptionPane.showMessageDialog(null, "请输入正确的手机号码");
+            return;
+        }
+        // 创建一个DatabaseConnect 对象
+        DatabaseUtils databaseUtils = new DatabaseUtils();
+
+        // 初始化一个 Connection 对象，用于存储数据库连接
+        Connection connection = null;
+
+        try {
+            // 获取数据库连接
+            connection = databaseUtils.getConnection();
+            UserDao userDao = new UserDao();
+            int result = userDao.addUser(connection, user);
+            if (result == 1) {
+                JOptionPane.showMessageDialog(null, "添加成功");
+                // 刷新表格
+                queryUser(new User());
+            } else if (result == 2) {
+                JOptionPane.showMessageDialog(null, "账号已注册");
+            } else {
+                JOptionPane.showMessageDialog(null, "添加失败");
+            }
+
+        } catch (Exception e) {
+            // 如果获取数据库连接时出现异常，打印异常堆栈信息
+            e.printStackTrace();
+        } finally {
+            try {
+                // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
+                databaseUtils.closeConnection(connection);
+            } catch (SQLException e) {
+                // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 连接数据库修改用户信息
+     *
+     * @param user 用户对象
+     */
+    public void modifyUser(User user) {
+        // 不允许包含空格的正则
+        boolean userRex = Pattern.matches("^(?!.*\\s).+$", user.getUserName());
+        if (!userRex) {
+            JOptionPane.showMessageDialog(null, "用户名不能有空格");
+            return;
+        }
+        boolean accountRex = Pattern.matches("^[a-zA-Z0-9_]+$", user.getUserAccount());
+        if (!accountRex) {
+            JOptionPane.showMessageDialog(null, "账户只能使用字母、数字、下划线");
+            return;
+        }
+//        boolean pwdRex = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?!.*\\s).{8,16}$", user.getPassword());
+//        if (!pwdRex) {
+//            JOptionPane.showMessageDialog(null, "密码8-16个字符需包含大、小写字母和数字且不包含空格");
+//            return;
+//        }
+        boolean phoneNumberRex = Pattern.matches("^1[34578]\\d{9}$", user.getPhone());
+        if (!phoneNumberRex) {
+            JOptionPane.showMessageDialog(null, "请输入正确的手机号码");
+            return;
+        }
+
+        // 创建一个DatabaseConnect 对象
+        DatabaseUtils databaseUtils = new DatabaseUtils();
+
+        // 初始化一个 Connection 对象，用于存储数据库连接
+        Connection connection = null;
+
+        try {
+            // 获取数据库连接
+            connection = databaseUtils.getConnection();
+            UserDao userDao = new UserDao();
+            int result = userDao.modifyUser(connection, user);
+            if (result == 2) {
+                JOptionPane.showMessageDialog(null, "账户已存在");
+
+            } else if (result > 0) {
+                JOptionPane.showMessageDialog(null, "修改成功");
+                // 刷新表格
+                queryUser(new User());
+            } else {
+                JOptionPane.showMessageDialog(null, "修改失败");
+            }
+        } catch (Exception e) {
+            // 如果获取数据库连接时出现异常，打印异常堆栈信息
+            e.printStackTrace();
+        } finally {
+            try {
+                // 在 finally 块中，无论是否出现异常，都尝试关闭数据库连接
+                databaseUtils.closeConnection(connection);
+            } catch (SQLException e) {
+                // 如果关闭数据库连接时出现 SQLException，打印异常堆栈信息
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 连接数据库删除用户信息
+     *
+     * @param user 用户对象
+     */
+    public void deleteUser(User user) {
+        // 创建一个DatabaseConnect 对象
+        DatabaseUtils databaseUtils = new DatabaseUtils();
+
+        // 初始化一个 Connection 对象，用于存储数据库连接
+        Connection connection = null;
+
+        try {
+            // 获取数据库连接
+            connection = databaseUtils.getConnection();
+            UserDao userDao = new UserDao();
+            int result = userDao.deleteUser(connection, user);
+            if (result > 0) {
+                JOptionPane.showMessageDialog(null, "删除成功");
+                // 刷新表格
+                queryUser(new User());
+            } else {
+                JOptionPane.showMessageDialog(null, "删除失败");
+            }
         } catch (Exception e) {
             // 如果获取数据库连接时出现异常，打印异常堆栈信息
             e.printStackTrace();
