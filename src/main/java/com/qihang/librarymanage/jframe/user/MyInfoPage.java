@@ -313,10 +313,6 @@ public class MyInfoPage extends JFrame {
             }
         }
     }
-    public static void main(String[] args) {
-        User user1 = new User();
-        user1.setId(1);
-        new MyInfoPage(user1);
-    }
+
 }
 

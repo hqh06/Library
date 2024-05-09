@@ -1,5 +1,6 @@
 package com.qihang.librarymanage.jframe.admin;
 
+import com.qihang.librarymanage.pojo.User;
 import com.qihang.librarymanage.utils.Theme;
 
 import javax.swing.*;
@@ -9,11 +10,12 @@ import java.awt.event.ActionListener;
 
 
 public class AdminPage extends JFrame {
-    Container container;
+    private final User user;
 
-    public AdminPage() {
+    public AdminPage(User user) {
+        // 保存用户登录的信息
+        this.user = user;
         new Theme(1);
-        this.container = getContentPane();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - getWidth()) / 2; // 计算水平位置
         int y = (screenSize.height - getHeight()) / 2; // 计算垂直位置
@@ -130,7 +132,4 @@ public class AdminPage extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new AdminPage();
-    }
 }

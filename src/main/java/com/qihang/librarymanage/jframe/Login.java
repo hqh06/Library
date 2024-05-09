@@ -2,6 +2,7 @@ package com.qihang.librarymanage.jframe;
 
 
 import com.qihang.librarymanage.dao.UserDao;
+import com.qihang.librarymanage.jframe.admin.AdminPage;
 import com.qihang.librarymanage.jframe.user.UserPage;
 import com.qihang.librarymanage.pojo.User;
 import com.qihang.librarymanage.utils.DatabaseUtils;
@@ -147,7 +148,8 @@ public class Login extends JFrame {
                 } else {
                     // 根据返回值判断是管理员还是普通用户则执行不同的页面
                     if (userTemp.getRole() == 0) {
-                        System.out.println("管理员");
+                        this.dispose(); // 关闭登录页面
+                        new AdminPage(userTemp); // 创建管理员页面
                     } else {
                         this.dispose(); // 关闭登录页面
                         new UserPage(userTemp); // 创建用户页面
