@@ -218,14 +218,16 @@ public class BookInfo {
         addJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // 获取文本框中的内容，并去除前后的空格，然后检查是否为空
                 if (bookNameJTextField.getText().trim().isEmpty() ||
                         authorJTextField.getText().trim().isEmpty() ||
                         publishJTextField.getText().trim().isEmpty() ||
                         bookNumberJTextField.getText().trim().isEmpty() ||
                         bookRemarkJTextArea.getText().trim().isEmpty()
                 ) {
+                    // 如果以上任何一个信息为空，则弹出对话框提示用户输入相关信息
                     JOptionPane.showMessageDialog(null, "请输入相关信息");
-                    return;
+                    return;  // 结束当前方法
                 }
                 // 实例化图书对象并添加值
                 Book book = new Book();
@@ -396,7 +398,9 @@ public class BookInfo {
         modifyJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (bookNameJTextField.getText().trim().isEmpty() ||
+                // 检查所有的输入框是否为空，如果有任何一个为空，则弹出一个对话框提示用户输入相关信息，并返回
+                if (bookIdJTextField.getText().trim().isEmpty() ||
+                        bookNameJTextField.getText().trim().isEmpty() ||
                         authorJTextField.getText().trim().isEmpty() ||
                         publishJTextField.getText().trim().isEmpty() ||
                         bookNumberJTextField.getText().trim().isEmpty() ||
@@ -407,13 +411,9 @@ public class BookInfo {
                 }
                 // 实例化图书对象并添加值
                 Book book = new Book();
-                // 图书Id
                 book.setId(Integer.valueOf(bookIdJTextField.getText().trim()));
-                // 图书名
                 book.setBookName(bookNameJTextField.getText().trim());
-                // 作者
                 book.setAuthor(authorJTextField.getText().trim());
-                // 出版社
                 book.setPublish(publishJTextField.getText().trim());
                 // 将下拉框中选中的项转换为BookType类型，并赋值给selectedItem变量
                 BookType selectedItem = (BookType) bookTypeComboBox.getSelectedItem();
@@ -422,16 +422,13 @@ public class BookInfo {
                     // 图书类型
                     book.setTypeId(selectedItem.getId());
                 }
-                // 其中的正则表达式^[1-9][0-9]*$表示一个或多个数字，但是不能以零开头
+                // 其中库存的正则表达式^[1-9][0-9]*$表示一个或多个数字，但是不能以零开头
                 if (!Pattern.matches("^[1-9][0-9]*$", bookNumberJTextField.getText().trim())) {
                     JOptionPane.showMessageDialog(null, "请输入正确的库存");
                     return;
                 }
-                // 库存
                 book.setNumber(Integer.valueOf(bookNumberJTextField.getText().trim()));
-                // 描述
                 book.setBookRemark(bookRemarkJTextArea.getText().trim());
-
                 modifyBook(book);
             }
         });
@@ -445,8 +442,21 @@ public class BookInfo {
         deleteJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // 检查所有的输入框是否为空，如果有任何一个为空，则弹出一个对话框提示用户输入相关信息，并返回
+                if (bookIdJTextField.getText().trim().isEmpty() ||
+                        bookNameJTextField.getText().trim().isEmpty() ||
+                        authorJTextField.getText().trim().isEmpty() ||
+                        publishJTextField.getText().trim().isEmpty() ||
+                        bookNumberJTextField.getText().trim().isEmpty() ||
+                        bookRemarkJTextArea.getText().trim().isEmpty()
+                ) {
+                    JOptionPane.showMessageDialog(null, "请输入相关信息");
+                    return;
+                }
+
                 Book book = new Book();
                 book.setId(Integer.valueOf(bookIdJTextField.getText().trim()));
+                // 调用deleteBook方法删除指定id的书籍
                 deleteBook(book);
             }
         });

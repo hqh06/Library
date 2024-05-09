@@ -263,7 +263,6 @@ public class UserInfo {
                 userPhoneJTextField.setText("");
             }
         });
-
     }
 
     /**
@@ -284,7 +283,6 @@ public class UserInfo {
         userInfoJPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK, 3.0f, 3.0f));
         userInfoJPanel.setLayout(null);
         CONTENTPANE.add(userInfoJPanel);
-
 
         // 编号
         JLabel userId = new JLabel("编号:");
@@ -413,23 +411,41 @@ public class UserInfo {
         modifyJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 实例化用户对象并设置对象属性
+                // 检查用户ID、用户名、用户账户和用户电话这四个文本框是否为空
+                if (userIdJTextField.getText().trim().isEmpty() ||
+                        userNameJTextField.getText().trim().isEmpty() ||
+                        userAccountJTextField.getText().trim().isEmpty() ||
+                        userPhoneJTextField.getText().trim().isEmpty()
+                ) {
+                    // 如果任何一个文本框为空，则弹出一个对话框提示用户填写相关信息
+                    JOptionPane.showMessageDialog(null, "请填写相关信息");
+                    // 结束当前方法
+                    return;
+                }
+
                 User user = new User();
                 user.setId(Integer.valueOf(userIdJTextField.getText().trim()));
                 user.setUserName(userNameJTextField.getText().trim());
                 user.setUserAccount(userAccountJTextField.getText().trim());
+                // 检查selectMan单选按钮是否被选中
                 if (selectMan.isSelected()) {
+                    // 如果selectMan被选中，设置User对象的sex属性为1，代表男性
                     user.setSex(1); // 男
                 } else {
+                    // 如果selectMan没有被选中，设置User对象的sex属性为0，代表女性
                     user.setSex(0); // 女
                 }
+                // 检查selectUser单选按钮是否被选中
                 if (selectUser.isSelected()) {
+                    // 如果selectUser被选中，设置User对象的role属性为1，代表用户
                     user.setRole(1); // 用户
                 } else {
+                    // 如果selectUser没有被选中，设置User对象的role属性为0，代表管理员
                     user.setRole(0); // 管理员
                 }
                 user.setPhone(userPhoneJTextField.getText().trim());
 
+                // 调用modifyUser方法修改用户信息
                 modifyUser(user);
             }
         });
@@ -442,8 +458,20 @@ public class UserInfo {
         deleteJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // 检查用户ID、用户名、用户账户和用户电话这四个文本框是否为空
+                if (userIdJTextField.getText().trim().isEmpty() ||
+                        userNameJTextField.getText().trim().isEmpty() ||
+                        userAccountJTextField.getText().trim().isEmpty() ||
+                        userPhoneJTextField.getText().trim().isEmpty()
+                ) {
+                    JOptionPane.showMessageDialog(null, "请填写相关信息");
+                    // 结束当前方法
+                    return;
+                }
                 User user = new User();
+                // 设置User对象的id属性为用户在userIdJTextField文本框中输入的值
                 user.setId(Integer.valueOf(userIdJTextField.getText().trim()));
+                // 调用deleteUser方法删除该用户
                 deleteUser(user);
             }
         });
